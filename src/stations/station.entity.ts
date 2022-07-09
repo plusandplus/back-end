@@ -1,5 +1,6 @@
 import { BaseEntity } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { StationStatus } from './station-status.enum';
 
 @Entity()
 export class Station extends BaseEntity {
@@ -7,7 +8,7 @@ export class Station extends BaseEntity {
   station_idx: number;
 
   @Column({ type: 'varchar', length: 100, comment: '숙소이름' })
-  firstName: string;
+  name: string;
 
   @Column({ type: 'text', comment: '숙소대표이미지' })
   image: string;
@@ -24,6 +25,6 @@ export class Station extends BaseEntity {
   @Column({ type: 'text', comment: '좌표값y' })
   y: string;
 
-  @Column({ type: 'tinyint', comment: '활성화 여부' })
-  active: string;
+  @Column({ type: 'varchar', length: 20, comment: '활성화 상태 여부' })
+  status: StationStatus;
 }
