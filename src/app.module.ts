@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { StationsModule } from './stations/stations.module';
+import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Station } from './stations/station.entity';
+import { StationsModule } from './stations/stations.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+      ignoreEnvFile: process.env.NODE_ENV === 'prod',
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
@@ -16,10 +17,11 @@ import { Station } from './stations/station.entity';
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      database: 'test',
+      database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity.{js,ts}'],
       synchronize: true,
     }),
+    BoardsModule,
     StationsModule,
   ],
 })
