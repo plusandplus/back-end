@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 import { StationsModule } from './stations/stations.module';
 
 @Module({
@@ -22,6 +23,7 @@ import { StationsModule } from './stations/stations.module';
       synchronize: true,
     }),
     BoardsModule,
+    UsersModule,
     StationsModule,
   ],
 })
