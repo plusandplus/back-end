@@ -1,4 +1,5 @@
-import { BaseEntity } from 'typeorm';
+import { Room } from 'src/rooms/room.entity';
+import { BaseEntity, OneToMany } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { StationStatus } from './station-status.enum';
 
@@ -17,7 +18,7 @@ export class Station extends BaseEntity {
   content: string;
 
   @Column({ type: 'int', comment: '최저가격' })
-  price: string;
+  price: number;
 
   @Column({ type: 'text', comment: '좌표값x' })
   x: string;
@@ -27,4 +28,7 @@ export class Station extends BaseEntity {
 
   @Column({ type: 'varchar', length: 20, comment: '활성화 상태 여부' })
   status: StationStatus;
+
+  @OneToMany(() => Room, (room) => room.room_idx)
+  room: Room[];
 }

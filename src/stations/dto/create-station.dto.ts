@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { Room } from 'src/rooms/room.entity';
 import { StationStatus } from '../station-status.enum';
 export class CreateStationDto {
   @IsNotEmpty()
@@ -8,7 +9,7 @@ export class CreateStationDto {
   @IsNotEmpty()
   content: string;
   @IsNotEmpty()
-  price: string;
+  price: number;
   @IsNotEmpty()
   x: string;
   @IsNotEmpty()
