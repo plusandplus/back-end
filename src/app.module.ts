@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { StationsModule } from './stations/stations.module';
 
 @Module({
   imports: [
@@ -20,8 +21,8 @@ import { ConfigModule } from '@nestjs/config';
       entities: [__dirname + '/**/*.entity.{js,ts}'],
       synchronize: true,
     }),
-
     BoardsModule,
+    StationsModule,
   ],
 })
 export class AppModule {}
