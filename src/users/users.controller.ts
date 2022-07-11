@@ -19,20 +19,35 @@ import { UserSexValidationPipe } from './pipes/user-sex-validation.pipe';
 export class UsersController {
   constructor(private usersService: UsersService) {}
   @Get('/')
-  getAllUse(): Promise<User[]> {
-    return this.usersService.getAllUsers();
+  async getAllUse(): Promise<User[]> {
+    const users = await this.usersService.getAllUsers();
+    return Object.assign({
+      stautsCode: 200,
+      message: '유저 전체 목록 조회 성공',
+      data: users,
+    });
   }
   @Post('/')
-  createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.createUser(createUserDto);
   }
   @Get('/:id')
-  getBoardById(@Param('id') id: number): Promise<User> {
-    return this.usersService.getUserById(id);
+  async getBoardById(@Param('id') id: number): Promise<User> {
+    const user = await this.usersService.getUserById(id);
+    return Object.assign({
+      statusCode: 200,
+      message: '유저 정보 조회 성공',
+      data: { user },
+    });
   }
   @Delete('/:id')
-  deleteUser(@Param('id', ParseIntPipe) id): Promise<void> {
-    return this.usersService.deleteUser(id);
+  async deleteUser(@Param('id', ParseIntPipe) id): Promise<number> {
+    const user = await this.usersService.deleteUser(id);
+    return Object.assign({
+      statusCode: 200,
+      message: '유저 삭제 성공',
+      data: { user_idx: id },
+    });
   }
   @Patch('/:id/first')
   updateUserFirst(
