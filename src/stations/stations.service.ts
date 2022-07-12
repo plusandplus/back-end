@@ -20,7 +20,9 @@ export class StationsService {
   async getStationById(id: number): Promise<Station> {
     const found = await this.stationRepository.findOne(id);
     if (!found) {
-      throw new NotFoundException(`Cant't find Station with id ${id}`);
+      throw new NotFoundException(
+        `해당 숙소 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+      );
     }
     return found;
   }
@@ -38,7 +40,9 @@ export class StationsService {
     const result = await this.stationRepository.update(id, station);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Cant't find Station with id ${id}`);
+      throw new NotFoundException(
+        `해당 숙소 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+      );
     }
 
     return station;
@@ -62,7 +66,9 @@ export class StationsService {
     const result = await this.stationRepository.delete(id);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Cant't find Station with id ${id}`);
+      throw new NotFoundException(
+        `해당 숙소 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+      );
     }
 
     console.log('result', result);
