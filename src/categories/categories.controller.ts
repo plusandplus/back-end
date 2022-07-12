@@ -52,7 +52,7 @@ export class CategoriesController {
     const data = await this.categoriesService.updateCategory(id, category);
     return Object.assign({
       statusCode: 200,
-      message: `카테고리 업데이트 성공`,
+      message: `카테고리 수정 성공`,
       data,
     });
   }

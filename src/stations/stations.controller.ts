@@ -61,7 +61,7 @@ export class StationsController {
     const update = await this.stationsService.updateStation(id, station);
     return Object.assign({
       statusCode: 200,
-      message: `숙소 정보 업데이트 성공`,
+      message: `숙소 정보 수정 성공`,
       data: update,
     });
   }
