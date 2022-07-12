@@ -17,12 +17,12 @@ export class CategoriesService {
   async getAllCategories(
     classification: CategoryClassification,
   ): Promise<Category[]> {
-    const rooms = await getRepository(Category)
+    const categories = await getRepository(Category)
       .createQueryBuilder('category')
       .where('category.classification = :classification', { classification })
       .getMany();
 
-    return rooms;
+    return categories;
   }
 
   // 카테고리 등록
