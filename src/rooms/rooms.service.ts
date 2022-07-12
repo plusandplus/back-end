@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository } from 'typeorm';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { Room } from './room.entity';
-import { RoomRepository } from './rooms.repository';
+import { RoomRepository } from './room.repository';
 
 @Injectable()
 export class RoomsService {
@@ -40,6 +40,7 @@ export class RoomsService {
     await this.roomRepository.save(room);
     return room;
   }
+
   // 방 정보 수정
   async updateRoom(id: number, room: Room): Promise<Room> {
     const result = await this.roomRepository.update(id, room);
