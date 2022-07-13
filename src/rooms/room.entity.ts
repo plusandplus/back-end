@@ -41,7 +41,7 @@ export class Room extends BaseEntity {
   })
   public updated_at: Date;
 
-  @ManyToOne(() => Station, (station) => station.room, {
+  @ManyToOne(() => Station, (station) => station.rooms, {
     onDelete: 'CASCADE',
     nullable: false,
   })

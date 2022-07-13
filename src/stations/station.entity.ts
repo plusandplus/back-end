@@ -1,8 +1,14 @@
+import { Category } from 'src/categories/category.entity';
 import { Room } from 'src/rooms/room.entity';
+import { Theme } from 'src/themes/theme.entity';
 import {
   BaseEntity,
   CreateDateColumn,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
+  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
@@ -47,6 +53,28 @@ export class Station extends BaseEntity {
   })
   public updated_at: Date;
 
+  @OneToOne(() => Category, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'local_id' })
+  local_id: Category;
+
+  @OneToOne(() => Category, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'stay_id' })
+  stay_id: Category;
+
+  @ManyToMany(() => Theme)
+  @JoinTable({
+    name: 'stations_themes',
+    joinColumn: { name: 'station_idx' },
+    inverseJoinColumn: { name: 'theme_idx' },
+  })
+  themes: Theme[];
+
   @OneToMany(() => Room, (room) => room.id)
-  room: Room[];
+  rooms: Room[];
 }
