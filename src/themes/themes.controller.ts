@@ -53,7 +53,7 @@ export class ThemesController {
   }
 
   @Delete('/:id')
-  async deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return await this.themesService.deleteThemes(id);
+  deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.themesService.deleteThemes(id);
   }
 }

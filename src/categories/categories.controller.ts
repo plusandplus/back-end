@@ -58,7 +58,7 @@ export class CategoriesController {
   }
 
   @Delete('/:id')
-  async deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return await this.categoriesService.deleteCategory(id);
+  deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.categoriesService.deleteCategory(id);
   }
 }

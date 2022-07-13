@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getRepository } from 'typeorm';
 import { CategoryClassification } from './category-classification.enum';
 import { Category } from './category.entity';
 import { CategoryRepository } from './category.repository';
@@ -17,12 +16,7 @@ export class CategoriesService {
   async getAllCategories(
     classification: CategoryClassification,
   ): Promise<Category[]> {
-    const categories = await getRepository(Category)
-      .createQueryBuilder('category')
-      .where('category.classification = :classification', { classification })
-      .getMany();
-
-    return categories;
+    return await this.categoryRepository.getAllByClassification(classification);
   }
 
   // 카테고리 등록
