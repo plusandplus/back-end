@@ -26,7 +26,7 @@ import { ThemesModule } from './themes/themes.module';
       synchronize: true,
     }),
     BoardsModule,
-    // UsersModule,
+    UsersModule,
     StationsModule,
     RoomsModule,
     CategoriesModule,
