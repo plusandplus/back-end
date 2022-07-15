@@ -10,7 +10,7 @@ import {
   ValidationPipe,
   ParseIntPipe,
 } from '@nestjs/common';
-import { userOauth, userRole, userSEX } from './user.model.enum';
+import { userSEX } from './user.model.enum';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -60,7 +60,8 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body('sex', UserSexValidationPipe) sex: userSEX,
     @Body('age', ParseIntPipe) age: number,
+    @Body('phoneNumber') phoneNumber: string,
   ) {
-    return this.usersService.updateUser(id, sex, age);
+    return this.usersService.updateUser(id, sex, age, phoneNumber);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { userRole, userSEX, userOauth } from './user.model.enum';
+import { userSEX, userOauth } from './user.model.enum';
 import { User } from './user.entity';
 @Injectable()
 export class UsersService {
@@ -15,14 +15,10 @@ export class UsersService {
     return this.userRepository.find();
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { profile, nickName, sex, age, oauthName } = createUserDto;
-    const role = userRole.USER;
+    const { profile, nickName, oauthName } = createUserDto;
     const user = this.userRepository.create({
       profile,
       nickName,
-      role,
-      sex,
-      age,
       oauthName,
     });
     await this.userRepository.save(user);
@@ -45,11 +41,17 @@ export class UsersService {
     }
     return result.affected;
   }
-  async updateUser(id: number, sex: userSEX, age: number): Promise<User> {
+  async updateUser(
+    id: number,
+    sex: userSEX,
+    age: number,
+    phoneNumber: string,
+  ): Promise<User> {
     const user = await this.getUserById(id);
     user.age = age;
     user.sex = sex;
     user.firstSign = true;
+    user.phoneNumber = phoneNumber;
     await this.userRepository.save(user);
     return user;
   }
