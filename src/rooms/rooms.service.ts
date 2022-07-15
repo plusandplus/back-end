@@ -14,12 +14,7 @@ export class RoomsService {
 
   // 숙소(station_idx)별 방 목록 조회
   async getAllRooms(stationId: number): Promise<Room[]> {
-    const rooms = await getRepository(Room)
-      .createQueryBuilder('room')
-      .where('room.station_idx = :stationId', { stationId })
-      .getMany();
-
-    return rooms;
+    return await this.roomRepository.getAllByStationId(stationId);
   }
 
   // id로 방 상세조회

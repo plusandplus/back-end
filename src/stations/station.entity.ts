@@ -7,8 +7,8 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
-  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
@@ -53,14 +53,14 @@ export class Station extends BaseEntity {
   })
   public updated_at: Date;
 
-  @OneToOne(() => Category, {
+  @ManyToOne(() => Category, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'local_id' })
   local_id: Category;
 
-  @OneToOne(() => Category, {
+  @ManyToOne(() => Category, {
     onDelete: 'CASCADE',
     nullable: false,
   })
@@ -70,8 +70,8 @@ export class Station extends BaseEntity {
   @ManyToMany(() => Theme)
   @JoinTable({
     name: 'stations_themes',
-    joinColumn: { name: 'station_idx' },
-    inverseJoinColumn: { name: 'theme_idx' },
+    joinColumn: { name: 'station_id' },
+    inverseJoinColumn: { name: 'theme_id' },
   })
   themes: Theme[];
 

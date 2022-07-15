@@ -18,7 +18,7 @@ import { RoomsService } from './rooms.service';
 export class RoomsController {
   constructor(private roomsService: RoomsService) {}
 
-  @Get('/:id/station')
+  @Get('/station/:id')
   async getAllRoom(@Param('id', ParseIntPipe) id: number): Promise<Room[]> {
     const data = await this.roomsService.getAllRooms(id);
     return Object.assign({
@@ -63,7 +63,7 @@ export class RoomsController {
   }
 
   @Delete('/:id')
-  async deleteRoom(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return await this.roomsService.deleteRoom(id);
+  deleteRoom(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.roomsService.deleteRoom(id);
   }
 }
