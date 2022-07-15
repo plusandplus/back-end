@@ -15,9 +15,11 @@ import { User } from './user.entity';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserSexValidationPipe } from './pipes/user-sex-validation.pipe';
+
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
   @Get('/')
   async getAllUse(): Promise<User[]> {
     const users = await this.usersService.getAllUsers();
@@ -27,10 +29,12 @@ export class UsersController {
       data: users,
     });
   }
+
   @Post('/')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.createUser(createUserDto);
   }
+
   @Get('/:id')
   async getBoardById(@Param('id') id: number): Promise<User> {
     const user = await this.usersService.getUserById(id);
@@ -40,6 +44,7 @@ export class UsersController {
       data: { user },
     });
   }
+
   @Delete('/:id')
   async deleteUser(@Param('id', ParseIntPipe) id): Promise<number> {
     const user = await this.usersService.deleteUser(id);
@@ -49,6 +54,7 @@ export class UsersController {
       data: { user_idx: id },
     });
   }
+
   @Patch('/:id/first')
   updateUserFirst(
     @Param('id', ParseIntPipe) id: number,
