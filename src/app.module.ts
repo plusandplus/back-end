@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
@@ -7,6 +6,7 @@ import { StationsModule } from './stations/stations.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ThemesModule } from './themes/themes.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,12 +25,13 @@ import { ThemesModule } from './themes/themes.module';
       entities: [__dirname + '/**/*.entity.{js,ts}'],
       synchronize: true,
     }),
-    BoardsModule,
+
     UsersModule,
     StationsModule,
     RoomsModule,
     CategoriesModule,
     ThemesModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -4,6 +4,7 @@ import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { userSEX, userOauth } from './user.model.enum';
 import { User } from './user.entity';
+import { getConnection } from 'typeorm';
 @Injectable()
 export class UsersService {
   constructor(
@@ -32,6 +33,15 @@ export class UsersService {
       );
     }
     return found;
+  }
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await getConnection()
+      .createQueryBuilder()
+      .select('user')
+      .from(User, 'user')
+      .where('user.email = :email', { email })
+      .getOne();
+    return user;
   }
   async deleteUser(id: number): Promise<number> {
     const result = await this.userRepository.delete(id);
