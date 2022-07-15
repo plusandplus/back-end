@@ -31,16 +31,19 @@ export class UsersService {
   async getUserById(id: number): Promise<User> {
     const found = await this.userRepository.findOne(id);
     if (!found) {
-      throw new NotFoundException(`Can't find Board with id ${id}`);
+      throw new NotFoundException(
+        `해당 유저의 id(${id})가 없습니다. 다시 한 번 확인 해주세요`,
+      );
     }
     return found;
   }
-  async deleteUser(id: number): Promise<void> {
+  async deleteUser(id: number): Promise<number> {
     const result = await this.userRepository.delete(id);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Can't find User with id ${id}`);
+      throw new NotFoundException(`해당 유저의 id(${id})를 찾을 수 없습니다.`);
     }
+    return result.affected;
   }
   async updateUser(id: number, sex: userSEX, age: number): Promise<User> {
     const user = await this.getUserById(id);
