@@ -29,11 +29,12 @@ export class Station extends BaseEntity {
   content: string;
 
   @Column({ type: 'int', comment: '최저가격' })
-  price: number;
+  minprice: number;
+  @Column({ type: 'int', comment: '최고가격' })
+  maxprice: number;
 
   @Column({ type: 'text', comment: '좌표값x' })
   x: string;
-
   @Column({ type: 'text', comment: '좌표값y' })
   y: string;
 

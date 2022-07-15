@@ -23,7 +23,7 @@ export class StationsService {
   }
 
   // 숙소 목록 조회(user 전용, 검색필터링)
-  async getBySearch(query: SearchStataionDto): Promise<Station[]> {
+  async getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
     return await this.stationRepository.getBySearch(query);
   }
 

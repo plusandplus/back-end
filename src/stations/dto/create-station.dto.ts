@@ -18,7 +18,11 @@ export class CreateStationDto {
 
   @IsNotEmpty()
   @IsInt()
-  price: number;
+  minprice: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  maxprice: number;
 
   @IsNotEmpty()
   @IsString()
