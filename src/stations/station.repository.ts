@@ -32,7 +32,6 @@ export class StationRepository extends Repository<Station> {
     if (status) {
       result.andWhere(`station.status = '${status}'`);
     }
-
     if (localId) {
       result.andWhere('station.local_id = :localId', { localId });
     }
@@ -42,17 +41,18 @@ export class StationRepository extends Repository<Station> {
     if (themeIds) {
       result.andWhere(`station.tag_id IN (${themeIds})`);
     }
+
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
 
     const [stations, count] = await result.getManyAndCount();
-
     return { count, stations };
   }
 
   // 숙소 검색 (user 전용, 검색필터링)
-  async getBySearch(query: SearchStataionDto): Promise<Station[]> {
-    const { localId, stayIds, themeIds, page, take } = query;
+  async getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
+    const { localId, stayIds, themeIds, page, take, minprice, maxprice } =
+      query;
 
     const result = getRepository(Station)
       .createQueryBuilder('station')
@@ -70,8 +70,17 @@ export class StationRepository extends Repository<Station> {
     if (themeIds) {
       result.andWhere(`station.tag_id IN (${themeIds})`);
     }
+    if (maxprice) {
+      console.log(maxprice);
+      result.andWhere(`${maxprice}>=station.minprice`);
+    }
+    if (minprice) {
+      result.andWhere(`${minprice}<=station.maxprice`);
+    }
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
-    return result.getMany();
+
+    const [stations, count] = await result.getManyAndCount();
+    return { count, stations };
   }
 }
