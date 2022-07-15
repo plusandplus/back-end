@@ -1,14 +1,23 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { userRole, userSEX, userOauth } from '../user.model.enum';
 export class CreateUserDto {
   @IsNotEmpty()
-  profile: String;
+  @IsString()
+  profile: string;
+
   @IsNotEmpty()
-  nickName: String;
+  @IsString()
+  nickName: string;
+
   @IsNotEmpty()
+  @IsEnum(userSEX)
   sex: userSEX;
+
   @IsNotEmpty()
-  age: Number;
+  @IsInt()
+  age: number;
+
   @IsNotEmpty()
+  @IsEnum(userOauth)
   oauthName: userOauth;
 }
