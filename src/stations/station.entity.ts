@@ -70,8 +70,8 @@ export class Station extends BaseEntity {
   @ManyToMany(() => Theme)
   @JoinTable({
     name: 'stations_themes',
-    joinColumn: { name: 'station_idx' },
-    inverseJoinColumn: { name: 'theme_idx' },
+    joinColumn: { name: 'station_id' },
+    inverseJoinColumn: { name: 'theme_id' },
   })
   themes: Theme[];
 

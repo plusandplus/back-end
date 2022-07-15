@@ -9,34 +9,53 @@ import {
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CreateStationDto } from './dto/create-station.dto';
+import { SearchStataionDto } from './dto/search-station.dto';
 import { Station } from './station.entity';
 import { StationStatus } from './station-status.enum';
 import { StationsService } from './stations.service';
 import { StationStatusValidationPipe } from './pipes/station-status-validation.pipe';
+import { Theme } from 'src/themes/theme.entity';
 
 @Controller('stations')
 export class StationsController {
   constructor(private stationsService: StationsService) {}
 
-  @Get()
-  async getAllStation(): Promise<Station[]> {
-    const stations = await this.stationsService.getAllStations();
+  // 숙소 목록 조회(admin 전용, status 필터링)
+  @Get('/admin')
+  async getAllStation(@Query() query: SearchStataionDto): Promise<Station[]> {
+    const data = await this.stationsService.getAllByStatus(query);
     return Object.assign({
       statusCode: 200,
-      message: `숙소 목록 조회 성공`,
-      data: stations,
+      message: `숙소 목록 조회(admin) 성공`,
+      data,
+    });
+  }
+
+  // 숙소 검색 (user 전용, 검색필터링)
+  @Get('/search')
+  @UsePipes(ValidationPipe)
+  async getSearchStation(
+    @Query() query: SearchStataionDto,
+  ): Promise<Station[]> {
+    const data = await this.stationsService.getBySearch(query);
+    console.log({ query });
+    return Object.assign({
+      statusCode: 200,
+      message: `숙소 검색 성공`,
+      data,
     });
   }
 
   @Get('/:id')
   async getStationById(@Param('id') id: number): Promise<Station> {
-    const station = await this.stationsService.getStationById(id);
+    const data = await this.stationsService.getStationById(id);
     return Object.assign({
       statusCode: 200,
       message: `숙소 조회 성공`,
-      data: station,
+      data,
     });
   }
 
@@ -45,24 +64,37 @@ export class StationsController {
   async createStation(
     @Body() createStationDto: CreateStationDto,
   ): Promise<Station> {
-    const station = await this.stationsService.createStation(createStationDto);
+    const data = await this.stationsService.createStation(createStationDto);
     return Object.assign({
       statusCode: 201,
       message: `숙소 등록 성공`,
-      data: station,
+      data,
     });
   }
 
   @Patch('/:id')
   async updateStation(
     @Param('id', ParseIntPipe) id: number,
-    @Body() station: Station,
+    @Body() update: Station,
   ): Promise<Station> {
-    const update = await this.stationsService.updateStation(id, station);
+    const data = await this.stationsService.updateStation(id, update);
     return Object.assign({
       statusCode: 200,
       message: `숙소 정보 수정 성공`,
-      data: update,
+      data,
+    });
+  }
+
+  @Patch('/:id/theme')
+  async updateStatioTheme(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('themeIds') themeIds: Theme[],
+  ): Promise<Station> {
+    const data = await this.stationsService.updateStationTheme(id, themeIds);
+    return Object.assign({
+      statusCode: 200,
+      message: `숙소 테마 업데이트 성공`,
+      data,
     });
   }
 
@@ -71,16 +103,16 @@ export class StationsController {
     @Param('id', ParseIntPipe) id: number,
     @Body('status', StationStatusValidationPipe) status: StationStatus,
   ): Promise<Station> {
-    const station = await this.stationsService.updateStationStatus(id, status);
+    const data = await this.stationsService.updateStationStatus(id, status);
     return Object.assign({
       statusCode: 200,
       message: `숙소 상태 업데이트 성공`,
-      data: station,
+      data,
     });
   }
 
   @Delete('/:id')
-  async deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return await this.stationsService.deleteStation(id);
+  deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.stationsService.deleteStation(id);
   }
 }
