@@ -27,7 +27,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
     const response = context.switchToHttp().getResponse();
 
     const { authorization } = request.headers;
-    if (authorization === undefined) {
+    if (!authorization) {
       throw new HttpException(
         'Refresh Token 전송 안됨',
         HttpStatus.UNAUTHORIZED,
@@ -48,9 +48,9 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
       const bytes = CryptoJS.AES.decrypt(refreshToken, process.env.AES_KEY);
       const token = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
-      const token_verify = await this.authService.tokenValidate(token);
+      const tokenVerify = await this.authService.tokenValidate(token);
 
-      const user = await this.userService.getUserById(token_verify.user_no);
+      const user = await this.userService.getUserById(tokenVerify.userId);
 
       if (user.userRefreshToken === token) {
         return await this.authService.createLoginToken(user);
@@ -70,7 +70,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
           throw new HttpException('토큰이 만료되었습니다.', 410);
 
         default:
-          throw new HttpException('서버 오류입니다.', 500);
+          throw new HttpException('토큰 검증 오류입니다.', 500);
       }
     }
   }

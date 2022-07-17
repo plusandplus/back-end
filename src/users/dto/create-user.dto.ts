@@ -14,14 +14,6 @@ export class CreateUserDto {
   nickName: string;
 
   @IsNotEmpty()
-  @IsEnum(userSEX)
-  sex: userSEX;
-
-  @IsNotEmpty()
-  @IsInt()
-  age: number;
-
-  @IsNotEmpty()
   @IsEnum(userOauth)
   oauthName: userOauth;
 }
