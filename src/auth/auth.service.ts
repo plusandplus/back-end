@@ -1,8 +1,8 @@
+import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
-import CryptoJS from 'crypto-js';
 import { getConnection } from 'typeorm';
 
 @Injectable()
@@ -22,8 +22,8 @@ export class AuthService {
 
   async createLoginToken(user: User) {
     const payload = {
-      user_no: user.id,
-      user_token: 'loginToken',
+      userId: user.id,
+      userToken: 'loginToken',
     };
 
     return this.jwtService.sign(payload, {
@@ -34,8 +34,8 @@ export class AuthService {
 
   async createRefreshToken(user: User) {
     const payload = {
-      user_no: user.id,
-      user_token: 'refreshToken',
+      userId: user.id,
+      userToken: 'refreshToken',
     };
 
     const token = this.jwtService.sign(payload, {
@@ -43,7 +43,7 @@ export class AuthService {
       expiresIn: '50m',
     });
 
-    const refresh_token = CryptoJS.AES.encrypt(
+    const refreshToken = CryptoJS.AES.encrypt(
       JSON.stringify(token),
       process.env.AES_KEY,
     ).toString();
@@ -54,21 +54,13 @@ export class AuthService {
       .set({ userRefreshToken: token })
       .where(`id = ${user.id}`)
       .execute();
-    return refresh_token;
+    return refreshToken;
   }
 
-  onceToken(user_profile: any) {
-    const payload = {
-      user_email: user_profile.user_email,
-      user_nick: user_profile.user_nick,
-      user_provider: user_profile.user_provider,
-      user_token: 'onceToken',
-    };
+  async signUp(userProfile: any) {
+    const user = await this.usersService.createUser(userProfile);
 
-    return this.jwtService.sign(payload, {
-      secret: process.env.JWT_SCRECT_KEY,
-      expiresIn: '10m',
-    });
+    return user;
   }
 
   async tokenValidate(token: string) {

@@ -30,7 +30,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const token = authorization.replace('Bearer ', '');
     const tokenValidate = await this.validate(token);
     if (tokenValidate.tokenReissue) {
-      response.setHeader('access_token', tokenValidate.new_token);
+      response.setHeader('access_token', tokenValidate.newToken);
       response.setHeader('tokenReissue', true);
     } else {
       response.setHeader('tokenReissue', false);
@@ -42,47 +42,48 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   async validate(token: string) {
     try {
       // 토큰 검증
-      const token_verify = await this.authService.tokenValidate(token);
+      const tokenVerify = await this.authService.tokenValidate(token);
 
       // 토큰의 남은 시간 체크
-      const tokenExp = new Date(token_verify['exp'] * 1000);
-      const current_time = new Date();
+      const tokenExp = new Date(tokenVerify['exp'] * 1000);
+      const currentTime = new Date();
+      const LIMIT_TIME = 5;
 
-      const time_remaining = Math.floor(
-        (tokenExp.getTime() - current_time.getTime()) / 1000 / 60,
+      const timeRemaining = Math.floor(
+        (tokenExp.getTime() - currentTime.getTime()) / 1000 / 60,
       );
 
-      if (token_verify.user_token === 'loginToken') {
-        if (time_remaining < 5) {
+      if (tokenVerify.user_token === 'loginToken') {
+        if (timeRemaining < LIMIT_TIME) {
           // 로그인 토큰의남은 시간이 5분 미만일때
           // 엑세스 토큰 정보로 유저를 찾는다.
-          const access_token_user = await this.userService.getUserById(
-            token_verify.user_no,
+          const accessTokenUser = await this.userService.getUserById(
+            tokenVerify.userId,
           );
-          const refresh_token = await this.authService.tokenValidate(
-            access_token_user.userRefreshToken,
+          const refreshToken = await this.authService.tokenValidate(
+            accessTokenUser.userRefreshToken,
           );
-          const refresh_token_user = await this.userService.getUserById(
-            refresh_token.user_no,
+          const refreshTokenUser = await this.userService.getUserById(
+            refreshToken.userId,
           );
-          const new_token = await this.authService.createLoginToken(
-            refresh_token_user,
+          const newToken = await this.authService.createLoginToken(
+            refreshTokenUser,
           );
           return {
-            user: refresh_token_user,
-            new_token,
+            user: refreshTokenUser,
+            newToken,
             tokenReissue: true,
           };
         } else {
           // 로그인 토큰의남은 시간이 5분 이상일때
-          const user = await this.userService.getUserById(token_verify.user_no);
+          const user = await this.userService.getUserById(tokenVerify.userId);
           return {
             user,
             tokenReissue: false,
           };
         }
       } else {
-        return token_verify;
+        return tokenVerify;
       }
     } catch (error) {
       switch (error.message) {
@@ -94,7 +95,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           throw new HttpException('토큰이 만료되었습니다.', 410);
 
         default:
-          throw new HttpException('서버 오류입니다.', 500);
+          throw new HttpException('토큰 검증 오류입니다.', 401);
       }
     }
   }

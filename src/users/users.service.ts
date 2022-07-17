@@ -16,10 +16,11 @@ export class UsersService {
     return this.userRepository.find();
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { profile, nickName, oauthName } = createUserDto;
+    const { profile, nickName, email, oauthName } = createUserDto;
     const user = this.userRepository.create({
       profile,
       nickName,
+      email,
       oauthName,
     });
     await this.userRepository.save(user);

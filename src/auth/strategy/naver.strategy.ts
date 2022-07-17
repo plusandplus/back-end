@@ -2,10 +2,13 @@ import { Strategy } from 'passport-naver';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-
+import { StrategyModel } from './public.strategy.model';
 @Injectable()
 export class NaverStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private strategyModel: StrategyModel,
+  ) {
     super({
       clientID: process.env.NAVER_CLIENT_ID,
       clientSecret: process.env.NAVER_CLIENT_SECRET,
@@ -19,27 +22,26 @@ export class NaverStrategy extends PassportStrategy(Strategy) {
     profile: any,
     done: any,
   ): Promise<any> {
-    const user_email = profile._json.email;
-    const user_nick = profile._json.nickname;
-    const user_provider = profile.provider;
-    const user_profile = {
-      user_email,
-      user_nick,
-      user_provider,
+    console.log(profile);
+    const userEmail = profile._json.email;
+    const userNick = profile._json.nickname;
+    const userImage = profile._json.profile_image;
+    const userProvider = profile.provider;
+
+    const userProfile = {
+      email: userEmail,
+      nickName: userNick,
+      profile: userImage,
+      oauthName: userProvider.toUpperCase(),
     };
 
-    const user = await this.authService.validateUser(user_email);
-    if (user === null) {
-      // 유저가 없을때
-      console.log('일회용 토큰 발급');
-      const once_token = this.authService.onceToken(user_profile);
-      return { once_token, type: 'once' };
+    const user = await this.authService.validateUser(userEmail);
+    if (!user) {
+      console.log('회원가입');
+      return this.strategyModel.isSingUp(userProfile);
     }
 
-    // 유저가 있을때
     console.log('로그인 토큰 발급');
-    const access_token = await this.authService.createLoginToken(user);
-    const refresh_token = await this.authService.createRefreshToken(user);
-    return { access_token, refresh_token, type: 'login' };
+    return this.strategyModel.isLogin(user);
   }
 }
