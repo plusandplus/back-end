@@ -1,4 +1,5 @@
 import { Category } from 'src/categories/category.entity';
+import { Like } from 'src/likes/like.entity';
 import { Room } from 'src/rooms/room.entity';
 import { Theme } from 'src/themes/theme.entity';
 import {
@@ -78,4 +79,7 @@ export class Station extends BaseEntity {
 
   @OneToMany(() => Room, (room) => room.id)
   rooms: Room[];
+
+  @OneToMany(() => Like, (like) => like.id)
+  likes: Like[];
 }

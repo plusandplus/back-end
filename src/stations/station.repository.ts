@@ -3,7 +3,6 @@ import { ReturnStationsDto } from './dto/return-stations.dto';
 import { SearchStataionDto } from './dto/search-station.dto';
 import { StationStatus } from './station-status.enum';
 import { Station } from './station.entity';
-import { StationsController } from './stations.controller';
 
 @EntityRepository(Station)
 export class StationRepository extends Repository<Station> {
@@ -13,9 +12,8 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .where('station.id = :id', { id })
-      .getOne();
-    return result;
+      .where('station.id = :id', { id });
+    return result.getOne();
   }
 
   // 숙소 목록 조회(admin 전용, status 필터링)
@@ -39,9 +37,8 @@ export class StationRepository extends Repository<Station> {
       result.andWhere(`station.stay_id IN (${stayIds})`);
     }
     if (themeIds) {
-      result.andWhere(`station.tag_id IN (${themeIds})`);
+      result.andWhere(`theme.id IN (${themeIds})`);
     }
-
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
 
@@ -68,7 +65,7 @@ export class StationRepository extends Repository<Station> {
       result.andWhere(`station.stay_id IN (${stayIds})`);
     }
     if (themeIds) {
-      result.andWhere(`station.tag_id IN (${themeIds})`);
+      result.andWhere(`theme.id IN (${themeIds})`);
     }
     if (maxprice) {
       console.log(maxprice);

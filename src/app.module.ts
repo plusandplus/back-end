@@ -6,6 +6,8 @@ import { StationsModule } from './stations/stations.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ThemesModule } from './themes/themes.module';
+import { LikesModule } from './likes/likes.module';
+import { UploadsModule } from './uploads/uploads.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -25,12 +27,13 @@ import { AuthModule } from './auth/auth.module';
       entities: [__dirname + '/**/*.entity.{js,ts}'],
       synchronize: true,
     }),
-
     UsersModule,
     StationsModule,
     RoomsModule,
     CategoriesModule,
     ThemesModule,
+    LikesModule,
+    UploadsModule,
     AuthModule,
   ],
 })
