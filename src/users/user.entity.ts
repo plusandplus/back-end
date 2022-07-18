@@ -12,6 +12,9 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar', comment: 'oauth 구별 Id' })
+  oauthId: string;
+
   @Column({ type: 'varchar', comment: '유저이메일' })
   email: string;
 

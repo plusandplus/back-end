@@ -24,14 +24,16 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     const userEmail = profile._json.kakao_account.email;
     const userNick = profile._json.properties.nickname;
     const userImage = profile._json.properties.profile_image;
+    const oauthId = profile._json.id;
     const userProvider = profile.provider;
     const userProfile = {
       email: userEmail,
       nickName: userNick,
       profile: userImage,
+      oauthId: oauthId,
       oauthName: userProvider.toUpperCase(),
     };
-    const user = await this.authService.validateUser(userEmail);
+    const user = await this.authService.validateUser(oauthId);
     if (!user) {
       console.log('회원가입');
       return this.strategyModel.isSingUp(userProfile);

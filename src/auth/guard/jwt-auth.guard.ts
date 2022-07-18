@@ -53,37 +53,37 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         (tokenExp.getTime() - currentTime.getTime()) / 1000 / 60,
       );
 
-      if (tokenVerify.user_token === 'loginToken') {
-        if (timeRemaining < LIMIT_TIME) {
-          // 로그인 토큰의남은 시간이 5분 미만일때
-          // 엑세스 토큰 정보로 유저를 찾는다.
-          const accessTokenUser = await this.userService.getUserById(
-            tokenVerify.userId,
-          );
-          const refreshToken = await this.authService.tokenValidate(
-            accessTokenUser.userRefreshToken,
-          );
-          const refreshTokenUser = await this.userService.getUserById(
-            refreshToken.userId,
-          );
-          const newToken = await this.authService.createLoginToken(
-            refreshTokenUser,
-          );
-          return {
-            user: refreshTokenUser,
-            newToken,
-            tokenReissue: true,
-          };
-        } else {
-          // 로그인 토큰의남은 시간이 5분 이상일때
-          const user = await this.userService.getUserById(tokenVerify.userId);
-          return {
-            user,
-            tokenReissue: false,
-          };
-        }
-      } else {
+      if (tokenVerify.user_token !== 'loginToken') {
         return tokenVerify;
+      }
+
+      if (timeRemaining < LIMIT_TIME) {
+        // 로그인 토큰의남은 시간이 5분 미만일때
+        // 엑세스 토큰 정보로 유저를 찾는다.
+        const accessTokenUser = await this.userService.getUserById(
+          tokenVerify.userId,
+        );
+        const refreshToken = await this.authService.tokenValidate(
+          accessTokenUser.userRefreshToken,
+        );
+        const refreshTokenUser = await this.userService.getUserById(
+          refreshToken.userId,
+        );
+        const newToken = await this.authService.createLoginToken(
+          refreshTokenUser,
+        );
+        return {
+          user: refreshTokenUser,
+          newToken,
+          tokenReissue: true,
+        };
+      } else {
+        // 로그인 토큰의남은 시간이 5분 이상일때
+        const user = await this.userService.getUserById(tokenVerify.userId);
+        return {
+          user,
+          tokenReissue: false,
+        };
       }
     } catch (error) {
       switch (error.message) {
