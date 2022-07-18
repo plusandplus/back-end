@@ -30,7 +30,7 @@ export class UploadsController {
         })
         .promise();
       console.log(upload);
-      const imgurl = 'https://d2u1fvsvew9tft.cloudfront.net/plus/' + key;
+      const imgurl = process.env.AWS_CLOUDFRONT + key;
       return Object.assign({
         statusCode: 201,
         message: `이미지 등록 성공`,
