@@ -16,12 +16,13 @@ export class UsersService {
     return this.userRepository.find();
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { profile, nickName, email, oauthName } = createUserDto;
+    const { profile, nickName, email, oauthName, oauthId } = createUserDto;
     const user = this.userRepository.create({
       profile,
       nickName,
       email,
       oauthName,
+      oauthId,
     });
     await this.userRepository.save(user);
     return user;
@@ -41,6 +42,15 @@ export class UsersService {
       .select('user')
       .from(User, 'user')
       .where('user.email = :email', { email })
+      .getOne();
+    return user;
+  }
+  async getUserByOauthId(oauthId: string): Promise<User> {
+    const user = await getConnection()
+      .createQueryBuilder()
+      .select('user')
+      .from(User, 'user')
+      .where('user.oauthId = :oauthId', { oauthId })
       .getOne();
     return user;
   }

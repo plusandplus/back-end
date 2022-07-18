@@ -1,3 +1,4 @@
+import { userLevel } from './decorator/roles.decorator';
 import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -12,8 +13,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string): Promise<any> {
-    const user = await this.usersService.getUserByEmail(email);
+  async validateUser(oauthId: string): Promise<any> {
+    const user = await this.usersService.getUserByOauthId(oauthId);
     if (!user) {
       return null;
     }
@@ -23,6 +24,7 @@ export class AuthService {
   async createLoginToken(user: User) {
     const payload = {
       userId: user.id,
+      userLevel: user.userLevel,
       userToken: 'loginToken',
     };
 
@@ -33,6 +35,7 @@ export class AuthService {
   }
 
   async createRefreshToken(user: User) {
+    console.log(user);
     const payload = {
       userId: user.id,
       userToken: 'refreshToken',

@@ -16,4 +16,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(userOauth)
   oauthName: userOauth;
+
+  @IsNotEmpty()
+  @IsString()
+  oauthId: string;
 }

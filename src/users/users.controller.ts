@@ -42,10 +42,13 @@ export class UsersController {
   @Get('auth/kakao/callback')
   async kakaoCallback(@Req() req: any, @Res() res: any): Promise<any> {
     if (req.user.type === 'login') {
-      res.json({
-        acessToken: req.user.accessToken,
-        refreshToken: req.user.refreshToken,
-      });
+      //      res.json({
+      //        accessToken: req.user.accessToken,
+      //        refreshToken: req.user.refreshToken,
+      //      });
+      res.redirect(
+        `${process.env.CLIENT_HOST_NAME}/auth/kakao?accessToken=${req.user.accessToken}&refreshToken=${req.user.refreshToken}`,
+      );
     }
 
     res.end();
@@ -60,10 +63,13 @@ export class UsersController {
   @Get('auth/naver/callback')
   async callback(@Req() req: any, @Res() res: any): Promise<any> {
     if (req.user.type === 'login') {
-      res.json({
-        acessToken: req.user.accessToken,
-        refreshToken: req.user.refreshToken,
-      });
+      // res.json({
+      //   acessToken: req.user.accessToken,
+      //   refreshToken: req.user.refreshToken,
+      // });
+      res.redirect(
+        `${process.env.CLIENT_HOST_NAME}/auth/naver?accessToken=${req.user.accessToken}&refreshToken=${req.user.refreshToken}`,
+      );
     }
     res.end();
   }
@@ -72,7 +78,9 @@ export class UsersController {
   async refreshAccessToken() {
     return { success: true, message: 'new accessToken Issuance success' };
   }
-  @Roles(10)
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(100)
   @Get('/')
   async getAllUse(): Promise<User[]> {
     const users = await this.usersService.getAllUsers();
@@ -87,17 +95,27 @@ export class UsersController {
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.createUser(createUserDto);
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
   @Get('/:id')
-  async getBoardById(@Param('id') id: number): Promise<User> {
-    const user = await this.usersService.getUserById(id);
-    return Object.assign({
-      statusCode: 200,
-      message: '유저 정보 조회 성공',
-      data: { user },
-    });
+  async getUserById(@Param('id') id: number, @Req() req: any): Promise<User> {
+    console.log(req.user.userId, id);
+    if (req.user.userId === Number(id)) {
+      const user = await this.usersService.getUserById(id);
+      return Object.assign({
+        statusCode: 200,
+        message: '유저 정보 조회 성공',
+        data: { user },
+      });
+    } else {
+      return Object.assign({
+        statusCode: 200,
+        message: '본인 정보만 확인할 수 있습니다.',
+      });
+    }
   }
-
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(100)
   @Delete('/:id')
   async deleteUser(@Param('id', ParseIntPipe) id): Promise<number> {
     const user = await this.usersService.deleteUser(id);
