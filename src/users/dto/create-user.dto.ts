@@ -1,6 +1,10 @@
 import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
-import { userRole, userSEX, userOauth } from '../user.model.enum';
+import { userSEX, userOauth } from '../user.model.enum';
 export class CreateUserDto {
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
   @IsNotEmpty()
   @IsString()
   profile: string;
@@ -10,14 +14,10 @@ export class CreateUserDto {
   nickName: string;
 
   @IsNotEmpty()
-  @IsEnum(userSEX)
-  sex: userSEX;
-
-  @IsNotEmpty()
-  @IsInt()
-  age: number;
-
-  @IsNotEmpty()
   @IsEnum(userOauth)
   oauthName: userOauth;
+
+  @IsNotEmpty()
+  @IsString()
+  oauthId: string;
 }

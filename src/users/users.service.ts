@@ -2,8 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { userRole, userSEX, userOauth } from './user.model.enum';
+import { userSEX, userOauth } from './user.model.enum';
 import { User } from './user.entity';
+import { getConnection } from 'typeorm';
 @Injectable()
 export class UsersService {
   constructor(
@@ -15,15 +16,13 @@ export class UsersService {
     return this.userRepository.find();
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { profile, nickName, sex, age, oauthName } = createUserDto;
-    const role = userRole.USER;
+    const { profile, nickName, email, oauthName, oauthId } = createUserDto;
     const user = this.userRepository.create({
       profile,
       nickName,
-      role,
-      sex,
-      age,
+      email,
       oauthName,
+      oauthId,
     });
     await this.userRepository.save(user);
     return user;
@@ -37,6 +36,24 @@ export class UsersService {
     }
     return found;
   }
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await getConnection()
+      .createQueryBuilder()
+      .select('user')
+      .from(User, 'user')
+      .where('user.email = :email', { email })
+      .getOne();
+    return user;
+  }
+  async getUserByOauthId(oauthId: string): Promise<User> {
+    const user = await getConnection()
+      .createQueryBuilder()
+      .select('user')
+      .from(User, 'user')
+      .where('user.oauthId = :oauthId', { oauthId })
+      .getOne();
+    return user;
+  }
   async deleteUser(id: number): Promise<number> {
     const result = await this.userRepository.delete(id);
 
@@ -45,11 +62,17 @@ export class UsersService {
     }
     return result.affected;
   }
-  async updateUser(id: number, sex: userSEX, age: number): Promise<User> {
+  async updateUser(
+    id: number,
+    sex: userSEX,
+    age: number,
+    phoneNumber: string,
+  ): Promise<User> {
     const user = await this.getUserById(id);
     user.age = age;
     user.sex = sex;
     user.firstSign = true;
+    user.phoneNumber = phoneNumber;
     await this.userRepository.save(user);
     return user;
   }
