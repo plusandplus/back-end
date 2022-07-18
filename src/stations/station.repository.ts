@@ -37,7 +37,7 @@ export class StationRepository extends Repository<Station> {
       result.andWhere(`station.stay_id IN (${stayIds})`);
     }
     if (themeIds) {
-      result.andWhere(`station.tag_id IN (${themeIds})`);
+      result.andWhere(`theme.id IN (${themeIds})`);
     }
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
@@ -65,7 +65,7 @@ export class StationRepository extends Repository<Station> {
       result.andWhere(`station.stay_id IN (${stayIds})`);
     }
     if (themeIds) {
-      result.andWhere(`station.tag_id IN (${themeIds})`);
+      result.andWhere(`theme.id IN (${themeIds})`);
     }
     if (maxprice) {
       console.log(maxprice);
