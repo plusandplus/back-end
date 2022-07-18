@@ -19,7 +19,7 @@ export class ThemesController {
   constructor(private themesService: ThemesService) {}
 
   @Get('')
-  async getAllCategories(): Promise<Theme[]> {
+  async getAllThemes(): Promise<Theme[]> {
     const data = await this.themesService.getAllThemes();
     return Object.assign({
       statusCode: 200,
@@ -30,8 +30,8 @@ export class ThemesController {
 
   @Post('/')
   @UsePipes(ValidationPipe)
-  async createStation(@Body() createThemeDto: CreateThemeDto): Promise<Theme> {
-    const data = await this.themesService.createThemes(createThemeDto);
+  async createTheme(@Body() createThemeDto: CreateThemeDto): Promise<Theme> {
+    const data = await this.themesService.createTheme(createThemeDto);
     return Object.assign({
       statusCode: 201,
       message: `테마 등록 성공`,
@@ -40,11 +40,11 @@ export class ThemesController {
   }
 
   @Patch('/:id')
-  async updateStation(
+  async updateTheme(
     @Param('id', ParseIntPipe) id: number,
     @Body() theme: Theme,
   ): Promise<Theme> {
-    const data = await this.themesService.updateThemes(id, theme);
+    const data = await this.themesService.updateTheme(id, theme);
     return Object.assign({
       statusCode: 200,
       message: `테마 수정 성공`,
@@ -53,7 +53,7 @@ export class ThemesController {
   }
 
   @Delete('/:id')
-  deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.themesService.deleteThemes(id);
+  deleteTheme(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.themesService.deleteTheme(id);
   }
 }
