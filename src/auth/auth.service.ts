@@ -30,23 +30,23 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_SCRECT_KEY,
-      expiresIn: '6m',
+      expiresIn: '20m',
     });
   }
 
   async createRefreshToken(user: User) {
     console.log(user);
-    const payload = {
+    const payload = await {
       userId: user.id,
       userToken: 'refreshToken',
     };
 
-    const token = this.jwtService.sign(payload, {
+    const token = await this.jwtService.sign(payload, {
       secret: process.env.JWT_SCRECT_KEY,
       expiresIn: '50m',
     });
 
-    const refreshToken = CryptoJS.AES.encrypt(
+    const refreshToken = await CryptoJS.AES.encrypt(
       JSON.stringify(token),
       process.env.AES_KEY,
     ).toString();
@@ -57,7 +57,7 @@ export class AuthService {
       .set({ userRefreshToken: token })
       .where(`id = ${user.id}`)
       .execute();
-    return refreshToken;
+    return await refreshToken;
   }
 
   async signUp(userProfile: any) {

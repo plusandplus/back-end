@@ -23,14 +23,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const response = context.switchToHttp().getResponse();
 
     const { authorization } = request.headers;
-    if (authorization === undefined) {
+    if (!authorization) {
       throw new HttpException('Token 전송 안됨', HttpStatus.UNAUTHORIZED);
     }
 
     const token = authorization.replace('Bearer ', '');
     const tokenValidate = await this.validate(token);
     if (tokenValidate.tokenReissue) {
-      response.setHeader('access_token', tokenValidate.newToken);
+      response.setHeader('accessToken', tokenValidate.newToken);
       response.setHeader('tokenReissue', true);
     } else {
       response.setHeader('tokenReissue', false);
@@ -52,11 +52,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const timeRemaining = Math.floor(
         (tokenExp.getTime() - currentTime.getTime()) / 1000 / 60,
       );
-
-      if (tokenVerify.user_token !== 'loginToken') {
+      if (tokenVerify.userToken !== 'loginToken') {
         return tokenVerify;
       }
-
+      console.log('tokenVerify:', tokenVerify);
       if (timeRemaining < LIMIT_TIME) {
         // 로그인 토큰의남은 시간이 5분 미만일때
         // 엑세스 토큰 정보로 유저를 찾는다.
@@ -72,6 +71,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         const newToken = await this.authService.createLoginToken(
           refreshTokenUser,
         );
+
         return {
           user: refreshTokenUser,
           newToken,
@@ -95,7 +95,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           throw new HttpException('토큰이 만료되었습니다.', 410);
 
         default:
-          throw new HttpException('토큰 검증 오류입니다.', 401);
+          throw new HttpException(`${error}토큰 검증 오류입니다`, 401);
       }
     }
   }
