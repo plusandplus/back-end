@@ -1,3 +1,4 @@
+import { userLevel } from './../auth/decorator/roles.decorator';
 import { JwtAuthGuard } from './../auth/guard/jwt-auth.guard';
 import { RolesGuard } from './../auth/guard/roles.guard';
 import { KakaoAuthGuard } from '../auth/guard/kakao-auth.guard';
@@ -15,6 +16,7 @@ import {
   UseGuards,
   Req,
   Res,
+  Logger,
 } from '@nestjs/common';
 import { userSEX } from './user.model.enum';
 import { User } from './user.entity';
@@ -28,6 +30,7 @@ import { Roles } from 'src/auth/decorator/roles.decorator';
 
 @Controller('users')
 export class UsersController {
+  private logger = new Logger('UsersController');
   constructor(
     private usersService: UsersService,
     private readonly authService: AuthService,
@@ -74,7 +77,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(100)
   @Get('/')
-  async getAllUse(): Promise<User[]> {
+  async getAllUse(@Req() req: any): Promise<User[]> {
+    this.logger.verbose(`admin [${req.user.nickname}] check`);
     const users = await this.usersService.getAllUsers();
     return Object.assign({
       stautsCode: 200,
