@@ -62,16 +62,24 @@ export class UsersService {
     }
     return result.affected;
   }
+  async benUser(id: number): Promise<User> {
+    const user = await this.getUserById(id);
+    user.userLevel = 0;
+    await this.userRepository.save(user);
+    return user;
+  }
+
   async updateUser(
     id: number,
     sex: userSEX,
     age: number,
     phoneNumber: string,
+    firstSign: boolean,
   ): Promise<User> {
     const user = await this.getUserById(id);
     user.age = age;
     user.sex = sex;
-    user.firstSign = true;
+    user.firstSign = firstSign;
     user.phoneNumber = phoneNumber;
     await this.userRepository.save(user);
     return user;

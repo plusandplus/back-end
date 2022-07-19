@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { getRepository } from 'typeorm';
@@ -46,12 +46,13 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
   async validate(refreshToken: string) {
     try {
       const bytes = CryptoJS.AES.decrypt(refreshToken, process.env.AES_KEY);
+
       const token = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
       const tokenVerify = await this.authService.tokenValidate(token);
 
       const user = await this.userService.getUserById(tokenVerify.userId);
-      console.log(user);
+
       if (user.userRefreshToken === token) {
         return await this.authService.createLoginToken(user);
       } else {
@@ -70,7 +71,7 @@ export class JwtRefreshGuard extends AuthGuard('jwt') {
           throw new HttpException('토큰이 만료되었습니다.', 410);
 
         default:
-          throw new HttpException('토큰 검증 오류입니다.', 500);
+          throw new HttpException(`토큰 검증 오류입니다.${error}`, 500);
       }
     }
   }
