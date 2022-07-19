@@ -39,7 +39,7 @@ export class LikesController {
 
   // 찜 취소
   @Delete('/:id')
-  deleteStation(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  deleteLike(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.likesServcie.deleteLike(id);
   }
 
