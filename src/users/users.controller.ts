@@ -42,10 +42,6 @@ export class UsersController {
   @Get('auth/kakao/callback')
   async kakaoCallback(@Req() req: any, @Res() res: any): Promise<any> {
     if (req.user.type === 'login') {
-      //      res.json({
-      //        accessToken: req.user.accessToken,
-      //        refreshToken: req.user.refreshToken,
-      //      });
       res.redirect(
         `${process.env.CLIENT_HOST_NAME}/auth/kakao?accessToken=${req.user.accessToken}&refreshToken=${req.user.refreshToken}`,
       );
@@ -63,10 +59,6 @@ export class UsersController {
   @Get('auth/naver/callback')
   async callback(@Req() req: any, @Res() res: any): Promise<any> {
     if (req.user.type === 'login') {
-      // res.json({
-      //   acessToken: req.user.accessToken,
-      //   refreshToken: req.user.refreshToken,
-      // });
       res.redirect(
         `${process.env.CLIENT_HOST_NAME}/auth/naver?accessToken=${req.user.accessToken}&refreshToken=${req.user.refreshToken}`,
       );
@@ -97,11 +89,10 @@ export class UsersController {
   }
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(10)
-  @Get('/:id')
-  async getUserById(@Param('id') id: number, @Req() req: any): Promise<User> {
-    console.log(req.user.userId, id);
-    if (req.user.userId === Number(id)) {
-      const user = await this.usersService.getUserById(id);
+  @Get('/info')
+  async getUserById(@Req() req: any): Promise<User> {
+    if (req.user.id) {
+      const user = await this.usersService.getUserById(req.user.id);
       return Object.assign({
         statusCode: 200,
         message: '유저 정보 조회 성공',
@@ -116,23 +107,38 @@ export class UsersController {
   }
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(100)
-  @Delete('/:id')
-  async deleteUser(@Param('id', ParseIntPipe) id): Promise<number> {
-    const user = await this.usersService.deleteUser(id);
+  @Delete('/:id/ben')
+  async benUser(@Param('id', ParseIntPipe) id): Promise<number> {
+    const user = await this.usersService.benUser(id);
     return Object.assign({
       statusCode: 200,
-      message: '유저 삭제 성공',
-      data: { user_idx: id },
+      message: '유저 밴 성공',
+      data: { user },
     });
   }
-
-  @Patch('/:id/first')
-  updateUserFirst(
-    @Param('id', ParseIntPipe) id: number,
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
+  @Patch('/')
+  async updateUser(
+    @Req() req: any,
     @Body('sex', UserSexValidationPipe) sex: userSEX,
     @Body('age', ParseIntPipe) age: number,
     @Body('phoneNumber') phoneNumber: string,
+    @Body('firstSign') firstSign: boolean,
   ) {
-    return this.usersService.updateUser(id, sex, age, phoneNumber);
+    if (req.user.id) {
+      return this.usersService.updateUser(
+        req.user.id,
+        sex,
+        age,
+        phoneNumber,
+        firstSign,
+      );
+    } else {
+      return Object.assign({
+        statusCode: 200,
+        message: '본인 정보만 확인할 수 있습니다.',
+      });
+    }
   }
 }
