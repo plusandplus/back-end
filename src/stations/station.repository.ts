@@ -57,11 +57,21 @@ export class StationRepository extends Repository<Station> {
 
     const result = getRepository(Station)
       .createQueryBuilder('station')
+      .select([
+        'station.id',
+        'station.name',
+        'station.image',
+        'station.content',
+        'station.minprice',
+        'station.maxprice',
+        'local.name',
+        'stay.name',
+        'COUNT(like.station_id) AS like_cnt',
+      ])
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
       .leftJoinAndSelect('station.likes', 'like')
-      .addSelect('COUNT(like.station_id) AS like_cnt')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
