@@ -7,8 +7,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Event } from './event.entity';
@@ -19,7 +17,7 @@ export class EventsController {
   constructor(private eventsService: EventsService) {}
 
   @Get('/')
-  async getAllEvents() {
+  async getAllEvents(): Promise<Event[]> {
     const data = await this.eventsService.getAllEvents();
     return Object.assign({
       statusCode: 200,
@@ -29,8 +27,8 @@ export class EventsController {
   }
 
   @Get('/:id')
-  async getEvent(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.eventsService.getEvent(id);
+  async getEventById(@Param('id', ParseIntPipe) id: number): Promise<Event> {
+    const data = await this.eventsService.getEventById(id);
     return Object.assign({
       statusCode: 200,
       message: '이벤트 상세 조회 성공',
@@ -39,8 +37,7 @@ export class EventsController {
   }
 
   @Post('/')
-  @UsePipes(ValidationPipe)
-  async createEvent(@Body() createEventDto: CreateEventDto) {
+  async createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
     const data = await this.eventsService.createEvent(createEventDto);
     return Object.assign({
       statusCode: 201,
@@ -52,9 +49,9 @@ export class EventsController {
   @Patch('/:id')
   async updateEvent(
     @Param('id', ParseIntPipe) id: number,
-    @Body() update: Event,
-  ) {
-    const data = await this.eventsService.updateEvent(id, update);
+    @Body() event: Event,
+  ): Promise<Event> {
+    const data = await this.eventsService.updateEvent(id, event);
     return Object.assign({
       statusCode: 200,
       message: '이벤트 정보 수정 성공',

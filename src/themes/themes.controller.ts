@@ -6,8 +6,6 @@ import {
   Delete,
   Param,
   Body,
-  UsePipes,
-  ValidationPipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CreateThemeDto } from './dto/create-theme.dto';
@@ -29,7 +27,6 @@ export class ThemesController {
   }
 
   @Post('/')
-  @UsePipes(ValidationPipe)
   async createTheme(@Body() createThemeDto: CreateThemeDto): Promise<Theme> {
     const data = await this.themesService.createTheme(createThemeDto);
     return Object.assign({

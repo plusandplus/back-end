@@ -11,19 +11,16 @@ export class ThemesService {
     private themeRepository: ThemeRepository,
   ) {}
 
-  // 테마 목록 조회
-  async getAllThemes(): Promise<Theme[]> {
-    return await this.themeRepository.find();
+  getAllThemes(): Promise<Theme[]> {
+    return this.themeRepository.find();
   }
 
-  // 테마 등록
   async createTheme(createThemeDto: CreateThemeDto): Promise<Theme> {
     const theme = this.themeRepository.create(createThemeDto);
     await this.themeRepository.save(theme);
     return theme;
   }
 
-  // id로 테마 정보 수정
   async updateTheme(id: number, theme: Theme): Promise<Theme> {
     const result = await this.themeRepository.update(id, theme);
 
@@ -36,7 +33,6 @@ export class ThemesService {
     return theme;
   }
 
-  // id로 테마 삭제
   async deleteTheme(id: number): Promise<void> {
     const result = await this.themeRepository.delete(id);
 

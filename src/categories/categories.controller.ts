@@ -6,8 +6,6 @@ import {
   Delete,
   Param,
   Body,
-  UsePipes,
-  ValidationPipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
@@ -23,7 +21,9 @@ export class CategoriesController {
   async getAllCategories(
     @Param('classification') classification: CategoryClassification,
   ): Promise<Category[]> {
-    const data = await this.categoriesService.getAllCategories(classification);
+    const data = await this.categoriesService.getCategoriesByClassification(
+      classification,
+    );
     return Object.assign({
       statusCode: 200,
       message: `${classification} 카테고리 목록 조회 성공`,
@@ -32,7 +32,6 @@ export class CategoriesController {
   }
 
   @Post('/')
-  @UsePipes(ValidationPipe)
   async createStation(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {

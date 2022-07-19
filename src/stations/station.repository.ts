@@ -4,14 +4,19 @@ import { SearchStataionDto } from './dto/search-station.dto';
 import { StationStatus } from './station-status.enum';
 import { Station } from './station.entity';
 
+const ADMIN_TAKE = 10;
+const SEARCH_TAKE = 5;
+
 @EntityRepository(Station)
 export class StationRepository extends Repository<Station> {
   async getOne(id: number): Promise<Station> {
     const result = await getRepository(Station)
       .createQueryBuilder('station')
-      .leftJoinAndSelect('station.likes', 'like')
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.likes', 'like')
+      .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where('station.id = :id', { id })
       .getOne();
     return result;
@@ -20,18 +25,20 @@ export class StationRepository extends Repository<Station> {
   // 숙소 목록 조회(admin 전용, status 필터링)
   async getAll(query: SearchStataionDto): Promise<ReturnStationsDto> {
     const { status, localId, stayIds, themeIds, page, take } = query;
-
+    const limit = take ?? ADMIN_TAKE;
+    const offset = page ? ADMIN_TAKE * (page - 1) : 0;
     const result = getRepository(Station)
       .createQueryBuilder('station')
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
-      .addSelect('COUNT(like.station_id) AS like_cnt')
+      .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where('1=1');
 
     if (status) {
-      result.andWhere(`station.status = '${status}'`);
+      result.andWhere('station.status = :status', { status });
     }
     if (localId) {
       result.andWhere('station.local_id = :localId', { localId });
@@ -42,11 +49,12 @@ export class StationRepository extends Repository<Station> {
     if (themeIds) {
       result.andWhere(`theme.id IN (${themeIds})`);
     }
-    result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
+    result.limit(limit).offset(offset);
     console.log(result.getQuery());
 
-    const stations = await result.groupBy('station.id').getRawMany();
-    const count = await result.getCount();
+    const [stations, count] = await result
+      .groupBy('station.id')
+      .getManyAndCount();
     return { count, stations };
   }
 
@@ -54,6 +62,8 @@ export class StationRepository extends Repository<Station> {
   async getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
     const { localId, stayIds, themeIds, page, take, minprice, maxprice } =
       query;
+    const limit = take ?? SEARCH_TAKE;
+    const offset = page ? SEARCH_TAKE * (page - 1) : 0;
 
     const result = getRepository(Station)
       .createQueryBuilder('station')
@@ -64,14 +74,13 @@ export class StationRepository extends Repository<Station> {
         'station.content',
         'station.minprice',
         'station.maxprice',
-        'local.name',
-        'stay.name',
-        'COUNT(like.station_id) AS like_cnt',
       ])
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
+      .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
@@ -85,16 +94,17 @@ export class StationRepository extends Repository<Station> {
     }
     if (maxprice) {
       console.log(maxprice);
-      result.andWhere(`${maxprice}>=station.minprice`);
+      result.andWhere(':maxprice >= station.minprice', { maxprice });
     }
     if (minprice) {
-      result.andWhere(`${minprice}<=station.maxprice`);
+      result.andWhere(':minprice <= station.maxprice', { minprice });
     }
-    result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
+    result.limit(limit).offset(offset);
     console.log(result.getQuery());
 
-    const stations = await result.groupBy('station.id').getRawMany();
-    const count = await result.getCount();
+    const [stations, count] = await result
+      .groupBy('station.id')
+      .getManyAndCount();
     return { count, stations };
   }
 }

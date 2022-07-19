@@ -1,4 +1,5 @@
 import { Category } from 'src/categories/category.entity';
+import { Event } from 'src/events/event.entity';
 import { Like } from 'src/likes/like.entity';
 import { Room } from 'src/rooms/room.entity';
 import { Theme } from 'src/themes/theme.entity';
@@ -82,4 +83,8 @@ export class Station extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.station)
   likes: Like[];
+
+  @ManyToOne(() => Event)
+  @JoinColumn({ name: 'event_id' })
+  event_id: Event;
 }

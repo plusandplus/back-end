@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateLikeDto } from './dto/create-like.dto';
 import { Like } from './like.entity';
 import { LikeRepository } from './like.repository';
 
@@ -10,11 +11,16 @@ export class LikesService {
     private likeRepository: LikeRepository,
   ) {}
 
-  async createLike(stationId: number, userId: number): Promise<Like> {
-    const like = this.likeRepository.create({
-      station_id: stationId,
-      user_id: userId,
-    });
+  async getLikesByUser(id: number): Promise<Like[]> {
+    return this.likeRepository.getLikesByUser(id);
+  }
+
+  async getLikeCountByStation(id: number): Promise<object> {
+    return this.likeRepository.getLikeCountByStation(id);
+  }
+
+  async createLike(createlikeDto: CreateLikeDto): Promise<Like> {
+    const like = this.likeRepository.create(createlikeDto);
     await this.likeRepository.save(like);
     return like;
   }
@@ -29,14 +35,5 @@ export class LikesService {
     }
 
     console.log('result', result);
-  }
-
-  // user id 별 찜 목록조회
-  async getLikesByUser(id: number): Promise<Like[]> {
-    return this.likeRepository.getLikesByUser(id);
-  }
-
-  async getLikeCountByStation(id: number): Promise<object> {
-    return this.likeRepository.getLikeCountByStation(id);
   }
 }

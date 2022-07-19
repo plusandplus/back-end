@@ -15,7 +15,7 @@ export class EventsService {
     return await this.eventRepository.find();
   }
 
-  async getEvent(id: number): Promise<Event> {
+  async getEventById(id: number): Promise<Event> {
     const found = await this.eventRepository.findOne(id);
     if (!found) {
       throw new NotFoundException(
@@ -31,14 +31,14 @@ export class EventsService {
     return event;
   }
 
-  async updateEvent(id: number, update: Event): Promise<Event> {
-    const result = await this.eventRepository.update(id, update);
+  async updateEvent(id: number, event: Event): Promise<Event> {
+    const result = await this.eventRepository.update(id, event);
     if (result.affected === 0) {
       throw new NotFoundException(
         `해당 이벤트 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
-    return update;
+    return event;
   }
   async deleteEvent(id: number): Promise<void> {
     const result = await this.eventRepository.delete(id);

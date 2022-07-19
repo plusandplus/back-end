@@ -6,8 +6,6 @@ import {
   Delete,
   Param,
   Body,
-  UsePipes,
-  ValidationPipe,
   ParseIntPipe,
 } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -39,7 +37,6 @@ export class RoomsController {
   }
 
   @Post('/')
-  @UsePipes(ValidationPipe)
   async createRoom(@Body() createRoomDto: CreateRoomDto): Promise<Room> {
     const data = await this.roomsService.createRoom(createRoomDto);
     return Object.assign({
