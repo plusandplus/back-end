@@ -1,5 +1,4 @@
 import { EntityRepository, getRepository, Repository } from 'typeorm';
-import { resourceLimits } from 'worker_threads';
 import { Like } from './like.entity';
 
 @EntityRepository(Like)
