@@ -17,14 +17,14 @@ export class ThemesService {
   }
 
   // 테마 등록
-  async createThemes(createThemeDto: CreateThemeDto): Promise<Theme> {
+  async createTheme(createThemeDto: CreateThemeDto): Promise<Theme> {
     const theme = this.themeRepository.create(createThemeDto);
     await this.themeRepository.save(theme);
     return theme;
   }
 
   // id로 테마 정보 수정
-  async updateThemes(id: number, theme: Theme): Promise<Theme> {
+  async updateTheme(id: number, theme: Theme): Promise<Theme> {
     const result = await this.themeRepository.update(id, theme);
 
     if (result.affected === 0) {
@@ -37,7 +37,7 @@ export class ThemesService {
   }
 
   // id로 테마 삭제
-  async deleteThemes(id: number): Promise<void> {
+  async deleteTheme(id: number): Promise<void> {
     const result = await this.themeRepository.delete(id);
 
     if (result.affected === 0) {

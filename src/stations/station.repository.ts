@@ -9,11 +9,12 @@ export class StationRepository extends Repository<Station> {
   async getOne(id: number): Promise<Station> {
     const result = await getRepository(Station)
       .createQueryBuilder('station')
+      .leftJoinAndSelect('station.likes', 'like')
       .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .where('station.id = :id', { id });
-    return result.getOne();
+      .where('station.id = :id', { id })
+      .getOne();
+    return result;
   }
 
   // 숙소 목록 조회(admin 전용, status 필터링)
@@ -25,6 +26,8 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.likes', 'like')
+      .addSelect('COUNT(like.station_id) AS like_cnt')
       .where('1=1');
 
     if (status) {
@@ -42,7 +45,8 @@ export class StationRepository extends Repository<Station> {
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
 
-    const [stations, count] = await result.getManyAndCount();
+    const stations = await result.groupBy('station.id').getRawMany();
+    const count = await result.getCount();
     return { count, stations };
   }
 
@@ -56,6 +60,8 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.likes', 'like')
+      .addSelect('COUNT(like.station_id) AS like_cnt')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
@@ -77,7 +83,8 @@ export class StationRepository extends Repository<Station> {
     result.limit(take ?? 5).offset(page ? 5 * (page - 1) : 0);
     console.log(result.getQuery());
 
-    const [stations, count] = await result.getManyAndCount();
+    const stations = await result.groupBy('station.id').getRawMany();
+    const count = await result.getCount();
     return { count, stations };
   }
 }

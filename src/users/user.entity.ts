@@ -1,3 +1,4 @@
+import { Like } from 'src/likes/like.entity';
 import {
   BaseEntity,
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { userSEX, userOauth } from './user.model.enum';
 @Entity()
@@ -61,4 +63,7 @@ export class User extends BaseEntity {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   public updated_at: Date;
+
+  @OneToMany(() => Like, (like) => like.id)
+  likes: Like[];
 }
