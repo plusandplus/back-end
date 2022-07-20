@@ -5,7 +5,7 @@ import { StationStatus } from './station-status.enum';
 import { Station } from './station.entity';
 
 const ADMIN_TAKE = 10;
-const SEARCH_TAKE = 5;
+const SEARCH_TAKE = 10;
 
 @EntityRepository(Station)
 export class StationRepository extends Repository<Station> {

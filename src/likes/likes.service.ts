@@ -11,11 +11,11 @@ export class LikesService {
     private likeRepository: LikeRepository,
   ) {}
 
-  async getLikesByUser(id: number): Promise<Like[]> {
+  getLikesByUser(id: number): Promise<Like[]> {
     return this.likeRepository.getLikesByUser(id);
   }
 
-  async getLikeCountByStation(id: number): Promise<object> {
+  getLikeCountByStation(id: number): Promise<object> {
     return this.likeRepository.getLikeCountByStation(id);
   }
 
