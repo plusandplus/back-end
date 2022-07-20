@@ -66,7 +66,6 @@ export class Order extends BaseEntity {
 
   @ManyToOne(() => Event, {
     onDelete: 'CASCADE',
-    nullable: false,
   })
   @JoinColumn({ name: 'event_id' })
   event_id: Event;
