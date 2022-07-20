@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { StrategyModel } from './strategy/public.strategy.model';
+import { OrdersModule } from 'src/orders/orders.module';
 
 @Module({
   imports: [
