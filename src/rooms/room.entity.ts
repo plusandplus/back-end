@@ -1,9 +1,11 @@
+import { Order } from 'src/orders/orders.entity';
 import { Station } from 'src/stations/station.entity';
 import {
   BaseEntity,
   CreateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   UpdateDateColumn,
 } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
@@ -47,4 +49,7 @@ export class Room extends BaseEntity {
   })
   @JoinColumn({ name: 'station_id' })
   station_id: Station;
+
+  @OneToMany(() => Order, (order) => order.room_id)
+  orders: Order[];
 }

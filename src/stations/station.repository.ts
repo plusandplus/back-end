@@ -1,4 +1,10 @@
-import { EntityRepository, getRepository, Repository } from 'typeorm';
+import {
+  Brackets,
+  EntityRepository,
+  getRepository,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { ReturnStationsDto } from './dto/return-stations.dto';
 import { SearchStataionDto } from './dto/search-station.dto';
 import { StationStatus } from './station-status.enum';
@@ -13,11 +19,23 @@ export class StationRepository extends Repository<Station> {
   async getOne(id: number): Promise<Station> {
     return await getRepository(Station)
       .createQueryBuilder('station')
+      .select([
+        'station.id',
+        'station.name',
+        'station.image',
+        'station.content',
+        'station.minprice',
+        'station.maxprice',
+        'station.address',
+        'station.x',
+        'station.y',
+      ])
       .leftJoinAndSelect('station.local_id', 'local')
+      .leftJoinAndSelect('station.stay_id', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
       .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
-      .loadRelationCountAndMap('station.likesCount', 'station.likes')
+      .leftJoinAndSelect('station.rooms', 'room')
       .where('station.id = :id', { id })
       .getOne();
   }
@@ -62,8 +80,17 @@ export class StationRepository extends Repository<Station> {
 
   // 숙소 검색 (user 전용, 검색필터링)
   async getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
-    const { localId, stayIds, themeIds, page, take, minprice, maxprice } =
-      query;
+    const {
+      localId,
+      stayIds,
+      themeIds,
+      page,
+      take,
+      minprice,
+      maxprice,
+      checkIn,
+      checkOut,
+    } = query;
     const limit = take ?? SEARCH_TAKE;
     const offset = page ? SEARCH_TAKE * (page - 1) : 0;
 
@@ -82,7 +109,8 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.themes', 'theme')
       .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
-      .loadRelationCountAndMap('station.likesCount', 'station.likes')
+      .leftJoin('station.rooms', 'room')
+      .leftJoin('room.orders', 'order')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
@@ -103,12 +131,36 @@ export class StationRepository extends Repository<Station> {
     if (minprice) {
       result.andWhere(':minprice <= station.maxprice', { minprice });
     }
+    if (checkIn && !checkOut) {
+      result
+        .andWhere(
+          new Brackets((qb) => {
+            qb.andWhere(':checkIn < order.end_date', { checkIn });
+            qb.orWhere('order.end_date is null');
+          }),
+        )
+        .groupBy('station.id')
+        .having('SUM(room.max_cnt)-COUNT(order.room_id)>0');
+    }
+    if (checkIn && checkOut) {
+      result
+        .andWhere(
+          new Brackets((qb) => {
+            qb.andWhere(':checkIn < order.end_date', { checkIn });
+            qb.andWhere(':checkOut >= order.start_date', {
+              checkOut,
+            });
+            qb.orWhere('order.end_date is null');
+          }),
+        )
+        .groupBy('station.id')
+        .having('SUM(room.max_cnt)-COUNT(order.room_id)>0');
+    }
+
     result.limit(limit).offset(offset);
     console.log(result.getQuery());
-
-    const [stations, count] = await result
-      .groupBy('station.id')
-      .getManyAndCount();
+    console.log(await result.getCount());
+    const [stations, count] = await result.getManyAndCount();
     return { count, stations };
   }
 
@@ -152,7 +204,6 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.themes', 'theme')
       .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
-      .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where(`station.status = '${StationStatus.ACTIVE}'`)
       .andWhere('station.event_id = :eventId', { eventId: id })
       .getMany();
