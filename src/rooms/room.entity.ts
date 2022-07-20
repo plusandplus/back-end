@@ -41,13 +41,10 @@ export class Room extends BaseEntity {
   })
   public updated_at: Date;
 
-  @Column({ type: 'int', comment: '숙소아이디' })
-  station_id: number;
-
   @ManyToOne(() => Station, (station) => station.rooms, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'station_id' })
-  station: Station;
+  station_id: Station;
 }

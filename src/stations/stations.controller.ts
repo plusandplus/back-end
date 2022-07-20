@@ -61,7 +61,7 @@ export class StationsController {
     const data = await this.stationsService.getStationByEventId(id);
     return Object.assign({
       statusCode: 200,
-      message: `이벤트별(id:${id}) 숙소 목록 조회`,
+      message: `이벤트 id별(${id}) 숙소 목록 조회`,
       data,
     });
   }
