@@ -7,7 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './orders.entity';
 import { OrdersService } from './orders.service';
@@ -16,6 +21,8 @@ import { OrdersService } from './orders.service';
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(100)
   @Get('/')
   async getAllOrders(): Promise<Order[]> {
     const data = await this.ordersService.getAllOrders();
@@ -26,11 +33,11 @@ export class OrdersController {
     });
   }
 
-  @Get('/user/:id')
-  async getOrderByUser(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Order[]> {
-    const data = await this.ordersService.getOrderByUser(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
+  @Get('/user')
+  async getOrderByUser(@Req() req: any): Promise<Order[]> {
+    const data = await this.ordersService.getOrderByUser(req.user.id);
     return Object.assign({
       statusCode: 200,
       message: '유저 오더 조회 성공',
