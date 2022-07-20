@@ -8,7 +8,7 @@ export class LikeRepository extends Repository<Like> {
       .createQueryBuilder('like')
       .select('station_id')
       .leftJoinAndSelect('like.station', 'station')
-      .where(`like.user_id = ${id}`);
+      .where('like.user_id = :id', { id });
     return await result.getRawMany();
   }
 
@@ -16,7 +16,7 @@ export class LikeRepository extends Repository<Like> {
     const result = await getRepository(Like)
       .createQueryBuilder('like')
       .select('COUNT(*) as like_cnt')
-      .where(`like.station_id = ${id}`)
+      .where('like.station_id = :id', { id })
       .getRawOne();
     return result;
   }

@@ -6,8 +6,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
-import { CreateLikeDto } from './dto/create-like.dto';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { Like } from './like.entity';
 import { LikesService } from './likes.service';
 
@@ -15,7 +19,7 @@ import { LikesService } from './likes.service';
 export class LikesController {
   constructor(private likesServcie: LikesService) {}
 
-  @Get('station/:id')
+  @Get('/station/:id')
   async getLikeCountByStation(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
@@ -27,23 +31,26 @@ export class LikesController {
     });
   }
 
-  @Get('/user/:id')
-  async getLikesByUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    const data = await this.likesServcie.getLikesByUser(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
+  @Get('/user')
+  async getLikesByUser(@Req() req: any): Promise<void> {
+    const data = await this.likesServcie.getLikesByUser(req.user.id);
     return Object.assign({
       statusCode: 200,
-      message: `유저별(${id}) 찜 목록 조회 성공`,
+      message: `유저별(${req.user.id}) 찜 목록 조회 성공`,
       data,
     });
   }
 
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles(10)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
   @Post('/')
-  // async createLike(@Req() req: any, @Body() stationId: number): Promise<Like> {
-  // const data = await this.likesServcie.createLike(stationId, req.user.userId);
-  async createLike(@Body() createlikeDto: CreateLikeDto): Promise<Like> {
-    const data = await this.likesServcie.createLike(createlikeDto);
+  async createLike(
+    @Req() req: any,
+    @Body('station_id', ParseIntPipe) stationId: number,
+  ): Promise<Like> {
+    const data = await this.likesServcie.createLike(stationId, req.user.id);
     return Object.assign({
       statusCode: 201,
       message: '찜 등록 성공',

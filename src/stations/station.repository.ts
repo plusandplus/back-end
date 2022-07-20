@@ -11,7 +11,7 @@ const LIKE_LIMIT = 5;
 @EntityRepository(Station)
 export class StationRepository extends Repository<Station> {
   async getOne(id: number): Promise<Station> {
-    const result = await getRepository(Station)
+    return await getRepository(Station)
       .createQueryBuilder('station')
       .leftJoinAndSelect('station.local_id', 'local')
       .leftJoinAndSelect('station.themes', 'theme')
@@ -20,7 +20,6 @@ export class StationRepository extends Repository<Station> {
       .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where('station.id = :id', { id })
       .getOne();
-    return result;
   }
 
   // 숙소 목록 조회(admin 전용, status 필터링)
@@ -114,7 +113,7 @@ export class StationRepository extends Repository<Station> {
   }
 
   async getByLikeCount(): Promise<Station[]> {
-    const result = getRepository(Station)
+    return await getRepository(Station)
       .createQueryBuilder('station')
       .select([
         'station.id',
@@ -133,13 +132,12 @@ export class StationRepository extends Repository<Station> {
       .where(`station.status = '${StationStatus.ACTIVE}'`)
       .groupBy('station.id')
       .orderBy('COUNT(like.id)', 'DESC')
-      .limit(LIKE_LIMIT);
-    console.log(result.getQuery());
-    return await result.getMany();
+      .limit(LIKE_LIMIT)
+      .getMany();
   }
 
   async getByEventId(id: number): Promise<Station[]> {
-    const result = getRepository(Station)
+    return await getRepository(Station)
       .createQueryBuilder('station')
       .select([
         'station.id',
@@ -156,8 +154,7 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.likes', 'like')
       .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where(`station.status = '${StationStatus.ACTIVE}'`)
-      .andWhere('station.event_id = :eventId', { eventId: id });
-    console.log(result.getQuery());
-    return await result.getMany();
+      .andWhere('station.event_id = :eventId', { eventId: id })
+      .getMany();
   }
 }
