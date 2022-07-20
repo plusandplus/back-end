@@ -30,7 +30,7 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_SCRECT_KEY,
-      expiresIn: '20m',
+      expiresIn: '250h',
     });
   }
 

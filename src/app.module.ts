@@ -1,3 +1,4 @@
+import { OrdersModule } from './orders/orders.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -37,6 +38,7 @@ import { EventsModule } from './events/events.module';
     UploadsModule,
     AuthModule,
     EventsModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}
