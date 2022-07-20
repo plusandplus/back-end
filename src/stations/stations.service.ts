@@ -27,6 +27,14 @@ export class StationsService {
     return this.stationRepository.getBySearch(query);
   }
 
+  getStationByLikeCount(): Promise<Station[]> {
+    return this.stationRepository.getByLikeCount();
+  }
+
+  getStationByEventId(id: number): Promise<Station[]> {
+    return this.stationRepository.getByEventId(id);
+  }
+
   getStationById(id: number): Promise<Station> {
     const found = this.stationRepository.getOne(id);
     if (!found) {

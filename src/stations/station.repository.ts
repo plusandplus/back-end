@@ -6,6 +6,7 @@ import { Station } from './station.entity';
 
 const ADMIN_TAKE = 10;
 const SEARCH_TAKE = 10;
+const LIKE_LIMIT = 5;
 
 @EntityRepository(Station)
 export class StationRepository extends Repository<Station> {
@@ -44,10 +45,12 @@ export class StationRepository extends Repository<Station> {
       result.andWhere('station.local_id = :localId', { localId });
     }
     if (stayIds) {
-      result.andWhere(`station.stay_id IN (${stayIds})`);
+      const stayarr = stayIds.split(',');
+      result.andWhere('station.stay_id IN (:...stayIds)', { stayIds: stayarr });
     }
     if (themeIds) {
-      result.andWhere(`theme.id IN (${themeIds})`);
+      const themearr = themeIds.split(',');
+      result.andWhere('theme.id IN (:...themeIds)', { themeIds: themearr });
     }
     result.limit(limit).offset(offset);
     console.log(result.getQuery());
@@ -87,10 +90,12 @@ export class StationRepository extends Repository<Station> {
       result.andWhere('station.local_id = :localId', { localId });
     }
     if (stayIds) {
-      result.andWhere(`station.stay_id IN (${stayIds})`);
+      const stayarr = stayIds.split(',');
+      result.andWhere('station.stay_id IN (:...stayIds)', { stayIds: stayarr });
     }
     if (themeIds) {
-      result.andWhere(`theme.id IN (${themeIds})`);
+      const themearr = themeIds.split(',');
+      result.andWhere('theme.id IN (:...themeIds)', { themeIds: themearr });
     }
     if (maxprice) {
       console.log(maxprice);
@@ -106,5 +111,53 @@ export class StationRepository extends Repository<Station> {
       .groupBy('station.id')
       .getManyAndCount();
     return { count, stations };
+  }
+
+  async getByLikeCount(): Promise<Station[]> {
+    const result = getRepository(Station)
+      .createQueryBuilder('station')
+      .select([
+        'station.id',
+        'station.name',
+        'station.image',
+        'station.content',
+        'station.minprice',
+        'station.maxprice',
+      ])
+      .leftJoinAndSelect('station.local_id', 'local')
+      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.likes', 'like')
+      .loadRelationCountAndMap('station.likesCount', 'station.likes')
+      .where(`station.status = '${StationStatus.ACTIVE}'`)
+      .groupBy('station.id')
+      .orderBy('COUNT(like.id)', 'DESC')
+      .limit(LIKE_LIMIT);
+    console.log(result.getQuery());
+    return await result.getMany();
+  }
+
+  async getByEventId(id: number): Promise<Station[]> {
+    const result = getRepository(Station)
+      .createQueryBuilder('station')
+      .select([
+        'station.id',
+        'station.name',
+        'station.image',
+        'station.content',
+        'station.minprice',
+        'station.maxprice',
+      ])
+      .leftJoinAndSelect('station.local_id', 'local')
+      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.themes', 'theme')
+      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.likes', 'like')
+      .loadRelationCountAndMap('station.likesCount', 'station.likes')
+      .where(`station.status = '${StationStatus.ACTIVE}'`)
+      .andWhere('station.event_id = :eventId', { eventId: id });
+    console.log(result.getQuery());
+    return await result.getMany();
   }
 }
