@@ -6,7 +6,7 @@ export class RoomRepository extends Repository<Room> {
   async getAllByStationId(stationId: number) {
     return await getRepository(Room)
       .createQueryBuilder('room')
-      .where('room.station_idx = :stationId', { stationId })
+      .where('room.station_id = :stationId', { stationId })
       .getMany();
   }
 }

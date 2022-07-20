@@ -23,5 +23,6 @@ export class CreateRoomDto {
   max_cnt: number;
 
   @IsNotEmpty()
-  station_idx: Station;
+  @IsInt()
+  station_id: Station;
 }

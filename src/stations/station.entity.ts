@@ -78,7 +78,7 @@ export class Station extends BaseEntity {
   })
   themes: Theme[];
 
-  @OneToMany(() => Room, (room) => room.station)
+  @OneToMany(() => Room, (room) => room.station_id)
   rooms: Room[];
 
   @OneToMany(() => Like, (like) => like.station)
