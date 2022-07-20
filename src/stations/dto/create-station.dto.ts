@@ -33,6 +33,10 @@ export class CreateStationDto {
 
   @IsNotEmpty()
   @IsString()
+  address: string;
+
+  @IsNotEmpty()
+  @IsString()
   x: string;
 
   @IsNotEmpty()

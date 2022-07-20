@@ -25,20 +25,22 @@ export class SearchStataionDto {
   themeIds: string; // 테마
 
   // 날짜
-  @IsDate()
   @IsOptional()
   checkIn: Date; // 체크인날짜
 
-  @IsDate()
   @IsOptional()
   checkOut: Date; //체크아웃날짜
 
   // 가격
+  @IsOptional()
   minprice: number;
+  @IsOptional()
   maxprice: number;
 
   // 페이지
+  @IsOptional()
   page: number;
+  @IsOptional()
   take: number;
 
   // 정렬(최신순, 가격낮은 순 등등 => 예정..)

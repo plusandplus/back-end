@@ -1,6 +1,7 @@
 import { Category } from 'src/categories/category.entity';
 import { Event } from 'src/events/event.entity';
 import { Like } from 'src/likes/like.entity';
+import { Order } from 'src/orders/orders.entity';
 import { Room } from 'src/rooms/room.entity';
 import { Theme } from 'src/themes/theme.entity';
 import {
@@ -35,6 +36,8 @@ export class Station extends BaseEntity {
   @Column({ type: 'int', comment: '최고가격' })
   maxprice: number;
 
+  @Column({ type: 'varchar', comment: '상세주소' })
+  address: string;
   @Column({ type: 'text', comment: '좌표값x' })
   x: string;
   @Column({ type: 'text', comment: '좌표값y' })
@@ -87,4 +90,7 @@ export class Station extends BaseEntity {
   @ManyToOne(() => Event)
   @JoinColumn({ name: 'event_id' })
   event_id: Event;
+
+  @OneToMany(() => Order, (order) => order.station_id)
+  orders: Order[];
 }
