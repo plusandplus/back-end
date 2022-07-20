@@ -33,7 +33,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       oauthId: oauthId,
       oauthName: userProvider.toUpperCase(),
     };
-    const user = await this.authService.validateUser(userImage);
+    const user = await this.authService.validateUser(oauthId);
     if (!user) {
       console.log('회원가입');
       return this.strategyModel.isSingUp(userProfile);
