@@ -4,8 +4,7 @@ import { Category } from './category.entity';
 
 @EntityRepository(Category)
 export class CategoryRepository extends Repository<Category> {
-  // classification별 카테고리 목록 조회
-  async getAllByClassification(
+  async getByClassification(
     classification: CategoryClassification,
   ): Promise<Category[]> {
     return await getRepository(Category)

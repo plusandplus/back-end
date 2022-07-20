@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Station } from 'src/stations/station.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Event extends BaseEntity {
@@ -16,4 +23,7 @@ export class Event extends BaseEntity {
 
   @Column({ type: 'int', comment: '할인율' })
   rate: number;
+
+  @OneToMany(() => Station, (station) => station.id)
+  stations: Station[];
 }

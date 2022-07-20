@@ -6,8 +6,6 @@ import {
   Delete,
   Param,
   Body,
-  UsePipes,
-  ValidationPipe,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
@@ -36,7 +34,6 @@ export class StationsController {
 
   // 숙소 검색 (user 전용, 검색필터링)
   @Get('/search')
-  @UsePipes(ValidationPipe)
   async getSearchStation(
     @Query() query: SearchStataionDto,
   ): Promise<Station[]> {
@@ -60,7 +57,6 @@ export class StationsController {
   }
 
   @Post('/')
-  @UsePipes(ValidationPipe)
   async createStation(
     @Body() createStationDto: CreateStationDto,
   ): Promise<Station> {
@@ -75,9 +71,9 @@ export class StationsController {
   @Patch('/:id')
   async updateStation(
     @Param('id', ParseIntPipe) id: number,
-    @Body() update: Station,
+    @Body() station: Station,
   ): Promise<Station> {
-    const data = await this.stationsService.updateStation(id, update);
+    const data = await this.stationsService.updateStation(id, station);
     return Object.assign({
       statusCode: 200,
       message: `숙소 정보 수정 성공`,

@@ -12,14 +12,12 @@ export class CategoriesService {
     private categoryRepository: CategoryRepository,
   ) {}
 
-  // classification별 카테고리 목록 조회
-  async getAllCategories(
+  async getCategoriesByClassification(
     classification: CategoryClassification,
   ): Promise<Category[]> {
-    return await this.categoryRepository.getAllByClassification(classification);
+    return await this.categoryRepository.getByClassification(classification);
   }
 
-  // 카테고리 등록
   async createCategory(
     createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {
@@ -28,7 +26,6 @@ export class CategoriesService {
     return category;
   }
 
-  // id로 카테고리 정보 수정
   async updateCategory(id: number, category: Category): Promise<Category> {
     const result = await this.categoryRepository.update(id, category);
 

@@ -1,5 +1,6 @@
 import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { Category } from 'src/categories/category.entity';
+import { Event } from 'src/events/event.entity';
 import { Theme } from 'src/themes/theme.entity';
 import { StationStatus } from '../station-status.enum';
 
@@ -45,4 +46,7 @@ export class CreateStationDto {
   stay_id: Category;
 
   themes: Theme[];
+
+  @IsInt()
+  event_id: Event;
 }

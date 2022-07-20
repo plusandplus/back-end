@@ -11,12 +11,10 @@ export class RoomsService {
     private roomRepository: RoomRepository,
   ) {}
 
-  // 숙소(station_idx)별 방 목록 조회
-  async getAllRooms(stationId: number): Promise<Room[]> {
-    return await this.roomRepository.getAllByStationId(stationId);
+  getAllRooms(stationId: number): Promise<Room[]> {
+    return this.roomRepository.getAllByStationId(stationId);
   }
 
-  // id로 방 상세조회
   async getRoomById(id: number): Promise<Room> {
     const found = await this.roomRepository.findOne(id);
     if (!found) {
@@ -27,7 +25,6 @@ export class RoomsService {
     return found;
   }
 
-  // 방 등록
   async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
     const room = this.roomRepository.create(createRoomDto);
 
@@ -35,7 +32,6 @@ export class RoomsService {
     return room;
   }
 
-  // 방 정보 수정
   async updateRoom(id: number, room: Room): Promise<Room> {
     const result = await this.roomRepository.update(id, room);
 
@@ -48,7 +44,6 @@ export class RoomsService {
     return room;
   }
 
-  // 방 삭제
   async deleteRoom(id: number): Promise<void> {
     const result = await this.roomRepository.delete(id);
 
