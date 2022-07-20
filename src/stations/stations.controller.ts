@@ -46,6 +46,26 @@ export class StationsController {
     });
   }
 
+  @Get('/likes')
+  async getStationByLikeCount(): Promise<Station[]> {
+    const data = await this.stationsService.getStationByLikeCount();
+    return Object.assign({
+      statusCode: 200,
+      message: '인기순 숙소 목록 조회 (5개)',
+      data,
+    });
+  }
+
+  @Get('/events/:id')
+  async getStationByEventId(@Param('id') id: number): Promise<Station[]> {
+    const data = await this.stationsService.getStationByEventId(id);
+    return Object.assign({
+      statusCode: 200,
+      message: `이벤트별(id:${id}) 숙소 목록 조회`,
+      data,
+    });
+  }
+
   @Get('/:id')
   async getStationById(@Param('id') id: number): Promise<Station> {
     const data = await this.stationsService.getStationById(id);
