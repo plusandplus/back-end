@@ -35,7 +35,7 @@ export class NaverStrategy extends PassportStrategy(Strategy) {
       oauthName: userProvider.toUpperCase(),
     };
 
-    const user = await this.authService.validateUser(oauthId);
+    const user = await this.authService.validateUser(userImage);
     if (!user) {
       console.log('회원가입');
       return this.strategyModel.isSingUp(userProfile);

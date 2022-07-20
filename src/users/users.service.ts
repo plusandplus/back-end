@@ -54,6 +54,16 @@ export class UsersService {
       .getOne();
     return user;
   }
+  async getUserByProfile(profile: string): Promise<User> {
+    const user = await getConnection()
+      .createQueryBuilder()
+      .select('user')
+      .from(User, 'user')
+      .where('user.profile = :profile', { profile })
+      .getOne();
+    return user;
+  }
+
   async deleteUser(id: number): Promise<number> {
     const result = await this.userRepository.delete(id);
 

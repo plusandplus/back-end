@@ -13,8 +13,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(oauthId: string): Promise<any> {
-    const user = await this.usersService.getUserByOauthId(oauthId);
+  async validateUser(profile: string): Promise<any> {
+    const user = await this.usersService.getUserByProfile(profile);
     if (!user) {
       return null;
     }
