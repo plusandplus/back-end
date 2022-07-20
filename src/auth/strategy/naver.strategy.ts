@@ -6,7 +6,7 @@ import { StrategyModel } from './public.strategy.model';
 @Injectable()
 export class NaverStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private authService: AuthService,
+    private readonly authService: AuthService,
     private strategyModel: StrategyModel,
   ) {
     super({
