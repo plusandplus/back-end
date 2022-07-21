@@ -27,12 +27,12 @@ export class LikesService {
     return like;
   }
 
-  async deleteLike(id: number): Promise<void> {
-    const result = await this.likeRepository.delete(id);
+  async deleteLike(stationId: number, userId: number): Promise<void> {
+    const result = await this.likeRepository.deleteById(stationId, userId);
 
     if (result.affected === 0) {
       throw new NotFoundException(
-        `해당 찜 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+        `해당 숙소 id(${stationId})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
 

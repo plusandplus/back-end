@@ -20,4 +20,14 @@ export class LikeRepository extends Repository<Like> {
       .getRawOne();
     return result;
   }
+
+  async deleteById(stationId: number, userId: number) {
+    return await getRepository(Like)
+      .createQueryBuilder('like')
+      .delete()
+      .from(Like)
+      .where('like.station_id = :stationId', { stationId })
+      .andWhere('like.user_id = :userId', { userId })
+      .execute();
+  }
 }
