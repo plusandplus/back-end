@@ -82,6 +82,7 @@ export class UsersService {
   async updateUser(
     id: number,
     sex: userSEX,
+    nickName: string,
     age: number,
     phoneNumber: string,
     firstSign: boolean,
@@ -89,6 +90,7 @@ export class UsersService {
     const user = await this.getUserById(id);
     user.age = age;
     user.sex = sex;
+    user.nickName = nickName;
     user.firstSign = firstSign;
     user.phoneNumber = phoneNumber;
     await this.userRepository.save(user);
