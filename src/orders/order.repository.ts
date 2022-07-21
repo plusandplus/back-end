@@ -35,4 +35,14 @@ export class OrderRepository extends Repository<Order> {
       .leftJoinAndSelect('order.event_id', 'event')
       .getMany();
   }
+
+  async getOrderByRoomId(id: number, date: any): Promise<Order> {
+    return await getRepository(Order)
+      .createQueryBuilder('order')
+      .leftJoin('order.room_id', 'room')
+      .where('order.room_id = :id', { id })
+      .andWhere(':date between order.start_date and order.end_date', { date })
+      .andWhere(':date != order.end_date', { date })
+      .getOne();
+  }
 }

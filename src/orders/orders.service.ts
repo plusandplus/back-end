@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './orders.entity';
 import { OrderRepository } from './order.repository';
+import { RoomOrderDto } from './dto/room-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -60,5 +61,54 @@ export class OrdersService {
     }
 
     console.log('result', result);
+  }
+
+  //   getDatesStartToLast(startDate, lastDate) {
+  //     if(!(startDate instanceof Date && lastDate instanceof Date)) return "Not Date Object";
+  //     var result = [];
+  //     var curDate = startDate;
+  //     while(curDate <= lastDate) {
+  //         result.push(curDate);
+  //         curDate.setDate(curDate.getDate() + 1);
+  //     }
+  //     return result;
+  // }
+
+  getDatesStartToLast(startDate: string, lastDate: string) {
+    const orderByDate: RoomOrderDto[] = [];
+
+    // var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+    // if(!(regex.test(startDate) && regex.test(lastDate))) return orderByDate;
+
+    const curDate = new Date(startDate);
+    while (curDate <= new Date(lastDate)) {
+      orderByDate.push({
+        date: new Date(curDate.toISOString().split('T')[0]),
+        isOrdered: false,
+      });
+      curDate.setDate(curDate.getDate() + 1);
+    }
+    return orderByDate;
+  }
+
+  async getOrderByRoomId(
+    id: number,
+    from: string,
+    to: string,
+  ): Promise<RoomOrderDto[]> {
+    const orderByDate: RoomOrderDto[] = this.getDatesStartToLast(from, to);
+
+    await Promise.all(
+      orderByDate.map(async (o) => {
+        const found = await this.orderRepository.getOrderByRoomId(id, o.date);
+        console.log(found);
+        if (found) {
+          o.isOrdered = true;
+          console.log(o);
+        }
+      }),
+    );
+
+    return orderByDate;
   }
 }

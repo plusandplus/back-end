@@ -44,6 +44,21 @@ export class OrdersController {
       data,
     });
   }
+
+  @Get('/room/:id')
+  async getOrderByRoomId(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('from') from: string,
+    @Body('to') to: string,
+  ): Promise<Order[]> {
+    const data = await this.ordersService.getOrderByRoomId(id, from, to);
+    return Object.assign({
+      statusCode: 200,
+      message: `방 id(${id})별 주문 목록 현황 조회 성공`,
+      data,
+    });
+  }
+
   @Get('/:id')
   async getOrderById(@Param('id', ParseIntPipe) id: number): Promise<Order> {
     const data = await this.ordersService.getOrderById(id);
