@@ -156,11 +156,11 @@ export class StationRepository extends Repository<Station> {
         .groupBy('station.id')
         .having('SUM(room.max_cnt)-COUNT(order.room_id)>0');
     }
-
     result.limit(limit).offset(offset);
     console.log(result.getQuery());
-    console.log(await result.getCount());
-    const [stations, count] = await result.getManyAndCount();
+    const [stations, count] = await result
+      .groupBy('station.id')
+      .getManyAndCount();
     return { count, stations };
   }
 
