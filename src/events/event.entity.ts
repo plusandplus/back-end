@@ -15,8 +15,11 @@ export class Event extends BaseEntity {
   @Column({ type: 'varchar', comment: '이벤트이름' })
   name: string;
 
-  @Column({ type: 'text', comment: '이벤트이미지' })
+  @Column({ type: 'text', comment: '이벤트썸넬' })
   image: string;
+
+  @Column({ type: 'text', comment: '상세이미지' })
+  detailImage: string;
 
   @Column({ type: 'date', comment: '이벤트 시작날짜' })
   start_date: Date;

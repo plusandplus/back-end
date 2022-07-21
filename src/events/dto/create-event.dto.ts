@@ -10,6 +10,10 @@ export class CreateEventDto {
   image: string;
 
   @IsNotEmpty()
+  @IsString()
+  detailImage: string;
+
+  @IsNotEmpty()
   //   @IsDate()
   start_date: Date;
 
