@@ -30,6 +30,12 @@ export class Room extends BaseEntity {
   @Column({ type: 'int', comment: '방의 최대개수' })
   max_cnt: number;
 
+  @Column({ type: 'varchar', length: 30, comment: '체크인시간' })
+  checkin_time: string;
+
+  @Column({ type: 'varchar', length: 30, comment: '체크아웃시간' })
+  checkout_time: string;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
@@ -43,7 +49,7 @@ export class Room extends BaseEntity {
   })
   public updated_at: Date;
 
-  @ManyToOne(() => Station, (station) => station.rooms, {
+  @ManyToOne(() => Station, {
     onDelete: 'CASCADE',
     nullable: false,
   })

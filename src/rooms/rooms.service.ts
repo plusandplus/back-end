@@ -16,7 +16,9 @@ export class RoomsService {
   }
 
   async getRoomById(id: number): Promise<Room> {
-    const found = await this.roomRepository.findOne(id);
+    const found = await this.roomRepository.findOne(id, {
+      relations: ['station_id'],
+    });
     if (!found) {
       throw new NotFoundException(
         `해당 방 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
