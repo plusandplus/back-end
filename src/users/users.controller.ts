@@ -126,6 +126,7 @@ export class UsersController {
   async updateUser(
     @Req() req: any,
     @Body('sex', UserSexValidationPipe) sex: userSEX,
+    @Body('nickName') nickName: string,
     @Body('age', ParseIntPipe) age: number,
     @Body('phoneNumber') phoneNumber: string,
     @Body('firstSign') firstSign: boolean,
@@ -134,6 +135,7 @@ export class UsersController {
       return this.usersService.updateUser(
         req.user.id,
         sex,
+        nickName,
         age,
         phoneNumber,
         firstSign,
