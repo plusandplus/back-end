@@ -19,8 +19,10 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    console.log('level:', level, 'user', user.userLevel);
+
     const roleCheck = level.indexOf(user.userLevel);
-    if (roleCheck !== -1) {
+    if (level <= user.userLevel) {
       return true;
     } else {
       return false;
