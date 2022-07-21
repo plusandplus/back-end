@@ -58,8 +58,13 @@ export class LikesController {
     });
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
   @Delete('/:id')
-  deleteLike(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.likesServcie.deleteLike(id);
+  deleteLike(
+    @Req() req: any,
+    @Body('station_id', ParseIntPipe) stationId: number,
+  ): Promise<void> {
+    return this.likesServcie.deleteLike(stationId, req.user.id);
   }
 }
