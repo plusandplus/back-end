@@ -78,7 +78,7 @@ export class StationRepository extends Repository<Station> {
     return { count, stations };
   }
 
-  // 숙소 검색 (user 전용, 검색필터링)
+  // 숙소 검색 (user 전용, 검색 필터링)
   async getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
     const {
       localId,
@@ -109,8 +109,6 @@ export class StationRepository extends Repository<Station> {
       .leftJoinAndSelect('station.themes', 'theme')
       .leftJoinAndSelect('station.event_id', 'event')
       .leftJoinAndSelect('station.likes', 'like')
-      .leftJoin('station.rooms', 'room')
-      .leftJoin('room.orders', 'order')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
@@ -118,11 +116,15 @@ export class StationRepository extends Repository<Station> {
     }
     if (stayIds) {
       const stayarr = stayIds.split(',');
-      result.andWhere('station.stay_id IN (:...stayIds)', { stayIds: stayarr });
+      result.andWhere('station.stay_id IN (:...stayIds)', {
+        stayIds: stayarr,
+      });
     }
     if (themeIds) {
       const themearr = themeIds.split(',');
-      result.andWhere('theme.id IN (:...themeIds)', { themeIds: themearr });
+      result.andWhere('theme.id IN (:...themeIds)', {
+        themeIds: themearr,
+      });
     }
     if (maxprice) {
       console.log(maxprice);
@@ -133,34 +135,39 @@ export class StationRepository extends Repository<Station> {
     }
     if (checkIn && !checkOut) {
       result
-        .andWhere(
-          new Brackets((qb) => {
-            qb.andWhere(':checkIn < order.end_date', { checkIn });
-            qb.orWhere('order.end_date is null');
-          }),
+        .leftJoin('station.rooms', 'room')
+        .leftJoin(
+          (o) => {
+            return o.from('order', 'o2').where(':checkIn < o2.end_date', {
+              checkIn,
+            });
+          },
+          'o',
+          'station.id = o.station_id and room.id = o.room_id',
         )
         .groupBy('station.id')
-        .having('SUM(room.max_cnt)-COUNT(order.room_id)>0');
+        .having('count(*)-count(o.id)>0');
     }
     if (checkIn && checkOut) {
       result
-        .andWhere(
-          new Brackets((qb) => {
-            qb.andWhere(':checkIn < order.end_date', { checkIn });
-            qb.andWhere(':checkOut >= order.start_date', {
-              checkOut,
-            });
-            qb.orWhere('order.end_date is null');
-          }),
+        .leftJoin('station.rooms', 'room')
+        .leftJoin(
+          (o) => {
+            return o
+              .from('order', 'o2')
+              .where(':checkIn < o2.end_date and :checkOut >= o2.start_date', {
+                checkIn,
+                checkOut,
+              });
+          },
+          'o',
+          'station.id = o.station_id and room.id = o.room_id',
         )
         .groupBy('station.id')
-        .having('SUM(room.max_cnt)-COUNT(order.room_id)>0');
+        .having('count(*)-count(o.id)>0');
     }
     result.limit(limit).offset(offset);
-    console.log(result.getQuery());
-    const [stations, count] = await result
-      .groupBy('station.id')
-      .getManyAndCount();
+    const [stations, count] = await result.getManyAndCount();
     return { count, stations };
   }
 
