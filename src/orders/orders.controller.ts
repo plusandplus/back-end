@@ -45,7 +45,7 @@ export class OrdersController {
     });
   }
 
-  @Get('/room/:id')
+  @Post('/room/:id')
   async getOrderByRoomId(
     @Param('id', ParseIntPipe) id: number,
     @Body('from') from: string,
