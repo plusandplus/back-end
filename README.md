@@ -66,6 +66,10 @@
 ### 서비스 구조
 <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c3b8f225-d422-4fa0-93cc-6c9884aa60b3/plusplus%EA%B5%AC%EC%A1%B0.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220722%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220722T113853Z&X-Amz-Expires=86400&X-Amz-Signature=4017a8fcbcf809caebb5fa8460591cb8b3c8e6e33c3c85221ef38db3b7376492&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22plusplus%25EA%25B5%25AC%25EC%25A1%25B0.png%22&x-id=GetObject">
 
+#### ERD 구조
+<img src= "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a0c05c6e-e6a1-421f-9e45-2560e623a737/plus_erd.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220723%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220723T032813Z&X-Amz-Expires=86400&X-Amz-Signature=5ebf03e59ac9e1ed240524f62488695493eceed036bbceef0315c02b99ca0d58&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22plus_erd.png%22&x-id=GetObject">
+
+
 ### 폴더구조
 | frontend | backend | 
 | ------ | ------ |
