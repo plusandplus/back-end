@@ -30,6 +30,9 @@ export class Room extends BaseEntity {
   @Column({ type: 'int', comment: '방의 최대개수' })
   max_cnt: number;
 
+  @Column({ type: 'varchar', length: 50, comment: '결제상태값' })
+  status: string;
+
   @Column({ type: 'varchar', length: 30, comment: '체크인시간' })
   checkin_time: string;
 

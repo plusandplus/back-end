@@ -115,7 +115,7 @@ export class StationsController {
   }
 
   @Patch('/:id/status')
-  async updateStatioStatus(
+  async updateStationStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', StationStatusValidationPipe) status: StationStatus,
   ): Promise<Station> {

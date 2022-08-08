@@ -1,5 +1,6 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { Station } from 'src/stations/station.entity';
+import { RoomStatus } from '../room-status.enum';
 
 export class CreateRoomDto {
   @IsNotEmpty()
@@ -21,6 +22,18 @@ export class CreateRoomDto {
   @IsNotEmpty()
   @IsInt()
   max_cnt: number;
+
+  @IsNotEmpty()
+  @IsEnum(RoomStatus)
+  status: RoomStatus;
+
+  @IsNotEmpty()
+  @IsString()
+  checkin_time: string;
+
+  @IsNotEmpty()
+  @IsString()
+  checkout_time: string;
 
   @IsNotEmpty()
   @IsInt()
