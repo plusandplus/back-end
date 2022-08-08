@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { RoomStatusValidationPipe } from './pipes/room-status-validation.pipe';
+import { RoomStatus } from './room-status.enum';
 import { Room } from './room.entity';
 import { RoomsService } from './rooms.service';
 
@@ -36,6 +38,18 @@ export class RoomsController {
     });
   }
 
+  @Get('/:id/status')
+  async getRoomStatusById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Room> {
+    const data = await this.roomsService.getRoomStatusById(id);
+    return Object.assign({
+      statusCode: 200,
+      message: `방 상태 조회 성공`,
+      data,
+    });
+  }
+
   @Post('/')
   async createRoom(@Body() createRoomDto: CreateRoomDto): Promise<Room> {
     const data = await this.roomsService.createRoom(createRoomDto);
@@ -56,6 +70,19 @@ export class RoomsController {
       statusCode: 200,
       message: `방 정보 수정 성공`,
       data,
+    });
+  }
+
+  @Patch('/:id/status')
+  async updateRoomStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status', RoomStatusValidationPipe) status: RoomStatus,
+  ): Promise<Room> {
+    const data = await this.roomsService.updateRoomStatus(id, status);
+    return Object.assign({
+      statusCode: 200,
+      message: `방 상태 업데이트 성공`,
+      data: { status: data },
     });
   }
 
