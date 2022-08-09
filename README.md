@@ -1,7 +1,7 @@
 ## <img src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F66bb89d3-3f07-4e89-bdce-e3fb0c785174%2FUntitled.png?table=block&id=7f79d739-38ac-48ed-bded-99d756beda87&spaceId=c3aa8e4b-2a93-4a9a-aa2a-1781cca6f89b&width=2000&userId=44c0293a-2449-4194-944a-7d3176a94e23&cache=v2" width="100">
 
 <br>
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060320245main.png" width="600">
+<img src="https://user-images.githubusercontent.com/43837954/183717547-99671727-048c-46bd-b4c1-22d235ad5881.png" width="600">
 
 ### 서비스 링크 : [PLUSPLUS](http://kdt-sw2-seoul-team01.elicecoding.com/)
 
@@ -30,33 +30,33 @@
 
 ### 1. 카카오/네이버 소셜 로그인
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060163956login.gif" width= 200> <br/>
+<img src="https://user-images.githubusercontent.com/43837954/183717776-e425c289-dca2-4df1-aa02-3742730223c7.gif" width= 200> <br/>
 
 ### 2. 회원 정보 수정
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060702076user-info.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718084-9acdcdc2-4ae2-4322-8a66-7fb528b26ab9.gif" width=200><br/>
 
 ### 3. 좋아요(찜) 기능
 
-<img src= "https://d2u1fvsvew9tft.cloudfront.net/plus/1660060163867like.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718136-2675d111-a819-4d6d-a8d6-c57343cedf09.gif" width=200><br/>
 
 ### 숙소 검색 기능
 
 ### 4. 캘린더 필터
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060053898calendar.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718286-aea76b7d-c2ff-40d4-828c-71cc8652dde4.gif" width=200><br/>
 
 ### 5. 테마, 스테이 유형, 지역 필터
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060054123filter.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718466-e0111040-050c-4491-9a2d-a626617195b6.gif" width=200><br/>
 
 ### 6. 숙소 정보 조회
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060320334stay.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718479-faadcd99-9642-4ef0-9104-2522f0a04539.gif" width=200><br/>
 
 ### 7. 숙소 예약 기능
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660060320310order.gif" width=200><br/>
+<img src="https://user-images.githubusercontent.com/43837954/183718496-af8de0a5-9f0e-4d44-9f7f-c5bba6cc0d09.gif" width=200><br/>
 
 ### 사용 스택
 
@@ -72,17 +72,17 @@
 
 ### 서비스 구조
 
-<img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660065281728plusplus구조.png" width="1000">
+<img src="https://user-images.githubusercontent.com/43837954/183718704-51ddd431-94f9-474f-9e42-81059298a6b3.png" width="1000">
 
 #### ERD 구조
 
-<img src= "https://d2u1fvsvew9tft.cloudfront.net/plus/1660065281839plus_erd.png" width="700">
+<img src="https://user-images.githubusercontent.com/43837954/183718740-d6ca940d-f0f2-4fba-9b8f-120908fa9c4f.png" width="700">
 
 ### 폴더구조
 
-| frontend                                                                                        | backend                                                                                         |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| <img src="https://d2u1fvsvew9tft.cloudfront.net/plus/1660058930962front-folder.png" height=300> | <img src= "https://d2u1fvsvew9tft.cloudfront.net/plus/1659983596574back-folder.png" height=300> |
+| frontend                                                                                                                     | backend                                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://user-images.githubusercontent.com/43837954/183717400-ff6c7a20-6556-4d9a-b3a1-b08d8a436422.png" height=200> | <img src= "https://user-images.githubusercontent.com/43837954/183717187-ed2f96fd-5b88-49ff-b828-c5f9b3ca03db.png" height=200> |
 
 ### 협업 툴
 
