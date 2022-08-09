@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StationRepository } from 'src/stations/station.repository';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomStatus } from './room-status.enum';
 import { Room } from './room.entity';
@@ -10,6 +11,8 @@ export class RoomsService {
   constructor(
     @InjectRepository(RoomRepository)
     private roomRepository: RoomRepository,
+    @InjectRepository(StationRepository)
+    private stationRepository: StationRepository,
   ) {}
 
   getAllRooms(stationId: number): Promise<Room[]> {
@@ -36,15 +39,36 @@ export class RoomsService {
     return found;
   }
 
+  async updateStationPrice(stationId: number): Promise<void> {
+    const rooms = await this.getAllRooms(stationId);
+    const prices: number[] = [];
+    rooms.map((r) => {
+      prices.push(r.price);
+    });
+
+    await this.stationRepository.update(stationId, {
+      minprice: Math.min(...prices),
+      maxprice: Math.max(...prices),
+    });
+  }
+
   async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
     const room = this.roomRepository.create(createRoomDto);
-
     await this.roomRepository.save(room);
+
+    const { station_id } = createRoomDto;
+    this.updateStationPrice(Number(station_id));
+
     return room;
   }
 
   async updateRoom(id: number, room: Room): Promise<Room> {
     const result = await this.roomRepository.update(id, room);
+
+    if (room.price) {
+      const { station_id } = await this.getRoomById(id);
+      this.updateStationPrice(station_id.id);
+    }
 
     if (result.affected === 0) {
       throw new NotFoundException(
