@@ -1,61 +1,55 @@
-import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Category } from 'src/categories/category.entity';
 import { Event } from 'src/events/event.entity';
 import { Theme } from 'src/themes/theme.entity';
 import { StationStatus } from '../station-status.enum';
 
-export class CreateStationDto {
-  @IsNotEmpty()
+export class UpdateStationDto {
+  @IsOptional()
   @IsString()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   image: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   content: string;
 
-  // @IsNotEmpty()
-  // @IsInt()
-  // minprice: number;
+  @IsOptional()
+  @IsInt()
+  minprice: number;
 
-  // @IsNotEmpty()
-  // @IsInt()
-  // maxprice: number;
+  @IsOptional()
+  @IsInt()
+  maxprice: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   x: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   y: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(StationStatus)
   status: StationStatus;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   local_id: Category;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   stay_id: Category;
 
-  @IsNotEmpty()
+  @IsOptional()
   themes: Theme[];
 
   @IsOptional()

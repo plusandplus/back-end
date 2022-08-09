@@ -5,6 +5,7 @@ import { ThemeRepository } from 'src/themes/theme.repository';
 import { CreateStationDto } from './dto/create-station.dto';
 import { ReturnStationsDto } from './dto/return-stations.dto';
 import { SearchStataionDto } from './dto/search-station.dto';
+import { UpdateStationDto } from './dto/update-station.dto';
 import { StationStatus } from './station-status.enum';
 import { Station } from './station.entity';
 import { StationRepository } from './station.repository';
@@ -56,15 +57,45 @@ export class StationsService {
     return station;
   }
 
-  async updateStation(id: number, station: Station): Promise<Station> {
-    const result = await this.stationRepository.update(id, station);
+  async updateStation(
+    id: number,
+    updateStationDto: UpdateStationDto,
+  ): Promise<UpdateStationDto> {
+    const {
+      name,
+      image,
+      minprice,
+      maxprice,
+      content,
+      address,
+      x,
+      y,
+      status,
+      local_id,
+      stay_id,
+      themes,
+    } = updateStationDto;
+    if (themes) await this.updateStationTheme(id, themes);
+    const result = await this.stationRepository.update(id, {
+      ...(name && { name }),
+      ...(image && { image }),
+      ...(minprice && { minprice }),
+      ...(maxprice && { maxprice }),
+      ...(content && { content }),
+      ...(address && { address }),
+      ...(x && { x }),
+      ...(y && { y }),
+      ...(status && { status }),
+      ...(local_id && { local_id }),
+      ...(stay_id && { stay_id }),
+    });
     if (result.affected === 0) {
       throw new NotFoundException(
         `해당 숙소 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
 
-    return station;
+    return updateStationDto;
   }
 
   // 숙소 테마 업데이트
