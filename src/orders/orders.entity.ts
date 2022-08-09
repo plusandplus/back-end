@@ -27,7 +27,11 @@ export class Order extends BaseEntity {
   @Column({ type: 'int', comment: '결제 최종 가격(이벤트적용)' })
   price: number;
 
-  @Column({ type: 'varchar', comment: '결제 최종 가격(이벤트적용)' })
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    comment: '결제 최종 가격(이벤트적용)',
+  })
   SpecialRequest: string;
 
   @CreateDateColumn({

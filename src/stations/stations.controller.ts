@@ -15,7 +15,7 @@ import { Station } from './station.entity';
 import { StationStatus } from './station-status.enum';
 import { StationsService } from './stations.service';
 import { StationStatusValidationPipe } from './pipes/station-status-validation.pipe';
-import { Theme } from 'src/themes/theme.entity';
+import { UpdateStationDto } from './dto/update-station.dto';
 
 @Controller('stations')
 export class StationsController {
@@ -91,25 +91,12 @@ export class StationsController {
   @Patch('/:id')
   async updateStation(
     @Param('id', ParseIntPipe) id: number,
-    @Body() station: Station,
-  ): Promise<Station> {
-    const data = await this.stationsService.updateStation(id, station);
+    @Body() updateStationDto: UpdateStationDto,
+  ): Promise<UpdateStationDto> {
+    const data = await this.stationsService.updateStation(id, updateStationDto);
     return Object.assign({
       statusCode: 200,
       message: `숙소 정보 수정 성공`,
-      data,
-    });
-  }
-
-  @Patch('/:id/theme')
-  async updateStatioTheme(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('themeIds') themeIds: Theme[],
-  ): Promise<Station> {
-    const data = await this.stationsService.updateStationTheme(id, themeIds);
-    return Object.assign({
-      statusCode: 200,
-      message: `숙소 테마 업데이트 성공`,
       data,
     });
   }

@@ -31,9 +31,9 @@ export class Station extends BaseEntity {
   @Column({ type: 'varchar', comment: '숙소설명' })
   content: string;
 
-  @Column({ type: 'int', comment: '최저가격' })
+  @Column({ type: 'int', nullable: true, comment: '최저가격' })
   minprice: number;
-  @Column({ type: 'int', comment: '최고가격' })
+  @Column({ type: 'int', nullable: true, comment: '최고가격' })
   maxprice: number;
 
   @Column({ type: 'varchar', comment: '상세주소' })

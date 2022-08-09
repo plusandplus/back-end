@@ -1,10 +1,4 @@
-import {
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { StationStatus } from '../station-status.enum';
 
 export class SearchStataionDto {
