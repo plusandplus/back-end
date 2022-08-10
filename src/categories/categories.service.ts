@@ -48,24 +48,22 @@ export class CategoriesService {
   // id로 카테고리 삭제
   async deleteCategory(id: number): Promise<void> {
     const category = await this.categoryRepository.findOne(id);
-    // 해당 카테고리안에 숙소 데이터가 있으면 삭제 불가능
+    if (!category) {
+      throw new NotFoundException(
+        `해당 카테고리 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+      );
+    }
     const count = await this.stationRepository.getCountByCategoryId(
       id,
       category.classification,
     );
-    if (!count) {
+    if (count != 0) {
       throw new NotAcceptableException(
         `해당 카테고리 id(${id})에 숙소 데이터가 있습니다.`,
       );
     }
 
     const result = await this.categoryRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(
-        `해당 카테고리 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
-      );
-    }
-
     console.log('result', result);
   }
 }

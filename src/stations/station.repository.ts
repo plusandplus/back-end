@@ -180,10 +180,11 @@ export class StationRepository extends Repository<Station> {
     const result = getRepository(Station)
       .createQueryBuilder('station')
       .where('1=1');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    if ((classification = CategoryClassification.LOCAL))
+    if (classification == CategoryClassification.LOCAL)
       result.andWhere('station.local_id = :categoryId', { categoryId });
-    else result.andWhere('station.stay_id = :categoryId', { categoryId });
+    else if (classification == CategoryClassification.STAY)
+      result.andWhere('station.stay_id = :categoryId', { categoryId });
+    else return 0;
 
     return await result.getCount();
   }
