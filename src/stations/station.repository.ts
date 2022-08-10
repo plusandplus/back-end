@@ -1,3 +1,4 @@
+import { CategoryClassification } from 'src/categories/category-classification.enum';
 import {
   Brackets,
   EntityRepository,
@@ -170,6 +171,21 @@ export class StationRepository extends Repository<Station> {
     console.log(result.getQuery());
     const [stations, count] = await result.getManyAndCount();
     return { count, stations };
+  }
+
+  async getCountByCategoryId(
+    categoryId: number,
+    classification: string,
+  ): Promise<number> {
+    const result = getRepository(Station)
+      .createQueryBuilder('station')
+      .where('1=1');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    if ((classification = CategoryClassification.LOCAL))
+      result.andWhere('station.local_id = :categoryId', { categoryId });
+    else result.andWhere('station.stay_id = :categoryId', { categoryId });
+
+    return await result.getCount();
   }
 
   async getByLikeCount(): Promise<Station[]> {

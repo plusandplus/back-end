@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CategoryClassification } from 'src/categories/category-classification.enum';
 import { Theme } from 'src/themes/theme.entity';
 import { ThemeRepository } from 'src/themes/theme.repository';
 import { CreateStationDto } from './dto/create-station.dto';
@@ -26,6 +27,16 @@ export class StationsService {
   // 숙소 목록 조회(user 전용, 검색필터링)
   getBySearch(query: SearchStataionDto): Promise<ReturnStationsDto> {
     return this.stationRepository.getBySearch(query);
+  }
+
+  getCountByCategoryId(
+    categoryId: number,
+    classification: CategoryClassification,
+  ): Promise<number> {
+    return this.stationRepository.getCountByCategoryId(
+      categoryId,
+      classification,
+    );
   }
 
   getStationByLikeCount(): Promise<Station[]> {

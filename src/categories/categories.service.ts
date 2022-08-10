@@ -1,5 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StationRepository } from 'src/stations/station.repository';
 import { CategoryClassification } from './category-classification.enum';
 import { Category } from './category.entity';
 import { CategoryRepository } from './category.repository';
@@ -10,6 +15,8 @@ export class CategoriesService {
   constructor(
     @InjectRepository(CategoryRepository)
     private categoryRepository: CategoryRepository,
+    @InjectRepository(StationRepository)
+    private stationRepository: StationRepository,
   ) {}
 
   async getCategoriesByClassification(
@@ -40,8 +47,19 @@ export class CategoriesService {
 
   // id로 카테고리 삭제
   async deleteCategory(id: number): Promise<void> {
-    const result = await this.categoryRepository.delete(id);
+    const category = await this.categoryRepository.findOne(id);
+    // 해당 카테고리안에 숙소 데이터가 있으면 삭제 불가능
+    const count = await this.stationRepository.getCountByCategoryId(
+      id,
+      category.classification,
+    );
+    if (!count) {
+      throw new NotAcceptableException(
+        `해당 카테고리 id(${id})에 숙소 데이터가 있습니다.`,
+      );
+    }
 
+    const result = await this.categoryRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(
         `해당 카테고리 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,

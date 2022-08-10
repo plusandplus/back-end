@@ -64,16 +64,15 @@ export class RoomsService {
 
   async updateRoom(id: number, room: Room): Promise<Room> {
     const result = await this.roomRepository.update(id, room);
-
-    if (room.price) {
-      const { station_id } = await this.getRoomById(id);
-      this.updateStationPrice(station_id.id);
-    }
-
     if (result.affected === 0) {
       throw new NotFoundException(
         `해당 방 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
+    }
+
+    if (room.price) {
+      const { station_id } = await this.getRoomById(id);
+      this.updateStationPrice(station_id.id);
     }
 
     return room;
