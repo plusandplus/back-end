@@ -46,7 +46,7 @@ export class OrdersService {
     const result = await this.orderRepository.update(id, update);
     if (result.affected === 0) {
       throw new NotFoundException(
-        `해당 이벤트 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+        `해당 order id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
     return update;
@@ -56,23 +56,12 @@ export class OrdersService {
 
     if (result.affected === 0) {
       throw new NotFoundException(
-        `해당 이벤트 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
+        `해당 order id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
 
     console.log('result', result);
   }
-
-  //   getDatesStartToLast(startDate, lastDate) {
-  //     if(!(startDate instanceof Date && lastDate instanceof Date)) return "Not Date Object";
-  //     var result = [];
-  //     var curDate = startDate;
-  //     while(curDate <= lastDate) {
-  //         result.push(curDate);
-  //         curDate.setDate(curDate.getDate() + 1);
-  //     }
-  //     return result;
-  // }
 
   getDatesStartToLast(startDate: string, lastDate: string) {
     const orderByDate: RoomOrderDto[] = [];
