@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ConsoleLogger,
+  Controller,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
@@ -18,8 +25,9 @@ export class DupordersController {
     @Req() req: any,
     @Body() createDupOrderDTO: CreateDupOrderDto,
   ): Promise<DupOrder> {
+    console.log('등록컨트롤러', await req.user.id);
     const data = await this.dupordersService.createDupOrder(
-      req.user_id,
+      req.user.id,
       createDupOrderDTO,
     );
     return Object.assign({
@@ -36,25 +44,6 @@ export class DupordersController {
     @Req() req: any,
     @Body() deleteDupOrderDto: DeleteDupOrderDto,
   ): Promise<void> {
-    return this.dupordersService.deleteDupOrder(req.user_id, deleteDupOrderDto);
+    return this.dupordersService.deleteDupOrder(req.user.id, deleteDupOrderDto);
   }
-
-  //   @Post('/')
-  //   async createDupOrder(
-  //     @Body() createDupOrderDTO: CreateDupOrderDto,
-  //   ): Promise<DupOrder> {
-  //     const data = await this.dupordersService.createDupOrder(createDupOrderDTO);
-  //     return Object.assign({
-  //       statusCode: 201,
-  //       message: `예약 시작 성공`,
-  //       data,
-  //     });
-  //   }
-
-  //   @Post('/delete')
-  //   async deleteDupOrder(
-  //     @Body() deleteDupOrderDto: DeleteDupOrderDto,
-  //   ): Promise<void> {
-  //     return this.dupordersService.deleteDupOrder(deleteDupOrderDto);
-  //   }
 }
