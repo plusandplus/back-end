@@ -22,14 +22,14 @@ export class DupOrderRepository extends Repository<DupOrder> {
     start_date: Date,
     end_date: Date,
   ) {
-    return await getRepository(DupOrder)
+    const result = getRepository(DupOrder)
       .createQueryBuilder()
       .delete()
       .from(DupOrder)
       .where('user_id = :user_id', { user_id })
       .andWhere('room_id = :room_id', { room_id })
-      .andWhere(':start_date < end_date', { start_date })
-      .andWhere(':end_date >= start_date', { end_date })
-      .execute();
+      .andWhere('start_date = :start_date', { start_date })
+      .andWhere('end_date = :end_date', { end_date });
+    return await result.execute();
   }
 }
