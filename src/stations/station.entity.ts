@@ -64,14 +64,14 @@ export class Station extends BaseEntity {
     nullable: false,
   })
   @JoinColumn({ name: 'local_id' })
-  local_id: Category;
+  local: Category;
 
   @ManyToOne(() => Category, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'stay_id' })
-  stay_id: Category;
+  stay: Category;
 
   @ManyToMany(() => Theme)
   @JoinTable({
@@ -81,7 +81,7 @@ export class Station extends BaseEntity {
   })
   themes: Theme[];
 
-  @OneToMany(() => Room, (room) => room.station_id)
+  @OneToMany(() => Room, (room) => room.station)
   rooms: Room[];
 
   @OneToMany(() => Like, (like) => like.station)
@@ -89,8 +89,8 @@ export class Station extends BaseEntity {
 
   @ManyToOne(() => Event)
   @JoinColumn({ name: 'event_id' })
-  event_id: Event;
+  event: Event;
 
-  @OneToMany(() => Order, (order) => order.station_id)
+  @OneToMany(() => Order, (order) => order.station)
   orders: Order[];
 }

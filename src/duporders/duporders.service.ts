@@ -20,7 +20,6 @@ export class DupordersService {
     user_id: number,
     createDupOrderDTO: CreateDupOrderDto,
   ): Promise<DupOrder> {
-    console.log('등록서비스', user_id);
     const { room_id, start_date, end_date } = createDupOrderDTO;
     // db에서 겹치는 room_id, date로 insert 시도하면 중복 에러 throw
     const dupcheck = await this.dupOrderRepository.dupOrderCheck(
@@ -48,7 +47,6 @@ export class DupordersService {
     user_id: number,
     deleteDupOrderDto: DeleteDupOrderDto,
   ): Promise<void> {
-    console.log('삭제서비스', user_id);
     const { room_id, start_date, end_date } = deleteDupOrderDto;
     const result = await this.dupOrderRepository.deleteDupOrder(
       user_id,

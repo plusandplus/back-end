@@ -57,8 +57,8 @@ export class Room extends BaseEntity {
     nullable: false,
   })
   @JoinColumn({ name: 'station_id' })
-  station_id: Station;
+  station: Station;
 
-  @OneToMany(() => Order, (order) => order.room_id)
+  @OneToMany(() => Order, (order) => order.room)
   orders: Order[];
 }

@@ -31,10 +31,10 @@ export class StationRepository extends Repository<Station> {
         'station.x',
         'station.y',
       ])
-      .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.local', 'local')
+      .leftJoinAndSelect('station.stay', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.event', 'event')
       .leftJoinAndSelect('station.likes', 'like')
       .leftJoinAndSelect('station.rooms', 'room')
       .where('station.id = :id', { id })
@@ -45,13 +45,13 @@ export class StationRepository extends Repository<Station> {
   async getAll(query: SearchStataionDto): Promise<ReturnStationsDto> {
     const { status, localId, stayIds, themeIds, page, take } = query;
     const limit = take ?? ADMIN_TAKE;
-    const offset = page ? ADMIN_TAKE * (page - 1) : 0;
+    const offset = page ? limit * (page - 1) : 0;
     const result = getRepository(Station)
       .createQueryBuilder('station')
-      .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.local', 'local')
+      .leftJoinAndSelect('station.stay', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.event', 'event')
       .leftJoinAndSelect('station.likes', 'like')
       .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where('1=1');
@@ -60,11 +60,11 @@ export class StationRepository extends Repository<Station> {
       result.andWhere('station.status = :status', { status });
     }
     if (localId) {
-      result.andWhere('station.local_id = :localId', { localId });
+      result.andWhere('station.local = :localId', { localId });
     }
     if (stayIds) {
       const stayarr = stayIds.split(',');
-      result.andWhere('station.stay_id IN (:...stayIds)', { stayIds: stayarr });
+      result.andWhere('station.stay IN (:...stayIds)', { stayIds: stayarr });
     }
     if (themeIds) {
       const themearr = themeIds.split(',');
@@ -93,7 +93,7 @@ export class StationRepository extends Repository<Station> {
       checkOut,
     } = query;
     const limit = take ?? SEARCH_TAKE;
-    const offset = page ? SEARCH_TAKE * (page - 1) : 0;
+    const offset = page ? limit * (page - 1) : 0;
 
     const result = getRepository(Station)
       .createQueryBuilder('station')
@@ -105,19 +105,19 @@ export class StationRepository extends Repository<Station> {
         'station.minprice',
         'station.maxprice',
       ])
-      .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.local', 'local')
+      .leftJoinAndSelect('station.stay', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.event', 'event')
       .leftJoinAndSelect('station.likes', 'like')
       .where(`station.status = '${StationStatus.ACTIVE}'`);
 
     if (localId) {
-      result.andWhere('station.local_id = :localId', { localId });
+      result.andWhere('station.local = :localId', { localId });
     }
     if (stayIds) {
       const stayarr = stayIds.split(',');
-      result.andWhere('station.stay_id IN (:...stayIds)', {
+      result.andWhere('station.stay IN (:...stayIds)', {
         stayIds: stayarr,
       });
     }
@@ -144,7 +144,7 @@ export class StationRepository extends Repository<Station> {
             });
           },
           'o',
-          'station.id = o.station_id and room.id = o.room_id',
+          'station.id = o.station and room.id = o.room',
         )
         .groupBy('station.id')
         .having('count(*)-count(o.id)>0');
@@ -162,7 +162,7 @@ export class StationRepository extends Repository<Station> {
               });
           },
           'o',
-          'station.id = o.station_id and room.id = o.room_id',
+          'station.id = o.station and room.id = o.room',
         )
         .groupBy('station.id')
         .having('count(*)-count(o.id)>0');
@@ -181,9 +181,9 @@ export class StationRepository extends Repository<Station> {
       .createQueryBuilder('station')
       .where('1=1');
     if (classification == CategoryClassification.LOCAL)
-      result.andWhere('station.local_id = :categoryId', { categoryId });
+      result.andWhere('station.local = :categoryId', { categoryId });
     else if (classification == CategoryClassification.STAY)
-      result.andWhere('station.stay_id = :categoryId', { categoryId });
+      result.andWhere('station.stay = :categoryId', { categoryId });
     else return 0;
 
     return await result.getCount();
@@ -200,10 +200,10 @@ export class StationRepository extends Repository<Station> {
         'station.minprice',
         'station.maxprice',
       ])
-      .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.local', 'local')
+      .leftJoinAndSelect('station.stay', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.event', 'event')
       .leftJoinAndSelect('station.likes', 'like')
       .loadRelationCountAndMap('station.likesCount', 'station.likes')
       .where(`station.status = '${StationStatus.ACTIVE}'`)
@@ -224,13 +224,13 @@ export class StationRepository extends Repository<Station> {
         'station.minprice',
         'station.maxprice',
       ])
-      .leftJoinAndSelect('station.local_id', 'local')
-      .leftJoinAndSelect('station.stay_id', 'stay')
+      .leftJoinAndSelect('station.local', 'local')
+      .leftJoinAndSelect('station.stay', 'stay')
       .leftJoinAndSelect('station.themes', 'theme')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('station.event', 'event')
       .leftJoinAndSelect('station.likes', 'like')
       .where(`station.status = '${StationStatus.ACTIVE}'`)
-      .andWhere('station.event_id = :eventId', { eventId: id })
+      .andWhere('station.event = :eventId', { eventId: id })
       .getMany();
   }
 }
