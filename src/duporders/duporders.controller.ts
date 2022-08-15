@@ -1,11 +1,4 @@
-import {
-  Body,
-  ConsoleLogger,
-  Controller,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
@@ -25,7 +18,6 @@ export class DupordersController {
     @Req() req: any,
     @Body() createDupOrderDTO: CreateDupOrderDto,
   ): Promise<DupOrder> {
-    console.log('등록컨트롤러', await req.user.id);
     const data = await this.dupordersService.createDupOrder(
       req.user.id,
       createDupOrderDTO,

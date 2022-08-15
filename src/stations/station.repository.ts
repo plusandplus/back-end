@@ -45,7 +45,7 @@ export class StationRepository extends Repository<Station> {
   async getAll(query: SearchStataionDto): Promise<ReturnStationsDto> {
     const { status, localId, stayIds, themeIds, page, take } = query;
     const limit = take ?? ADMIN_TAKE;
-    const offset = page ? ADMIN_TAKE * (page - 1) : 0;
+    const offset = page ? limit * (page - 1) : 0;
     const result = getRepository(Station)
       .createQueryBuilder('station')
       .leftJoinAndSelect('station.local_id', 'local')
@@ -93,7 +93,7 @@ export class StationRepository extends Repository<Station> {
       checkOut,
     } = query;
     const limit = take ?? SEARCH_TAKE;
-    const offset = page ? SEARCH_TAKE * (page - 1) : 0;
+    const offset = page ? limit * (page - 1) : 0;
 
     const result = getRepository(Station)
       .createQueryBuilder('station')
