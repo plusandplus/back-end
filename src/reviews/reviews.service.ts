@@ -44,7 +44,7 @@ export class ReviewsService {
     const order = await this.orderRepository.getOrderById(Number(order_id));
     // const { user_id, station_id, room_id } = order;
     const { nickName } = await this.userRepository.findOne(
-      Number(order.user_id.id),
+      Number(order.user.id),
     );
 
     const review = this.reviewRepository.create({

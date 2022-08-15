@@ -1,4 +1,5 @@
 import { Like } from 'src/likes/like.entity';
+import { Order } from 'src/orders/orders.entity';
 import {
   BaseEntity,
   Column,
@@ -66,4 +67,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.id)
   likes: Like[];
+
+  @OneToMany(() => Order, (order) => order.id)
+  orders: Order[];
 }

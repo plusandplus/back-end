@@ -6,15 +6,15 @@ export class RoomRepository extends Repository<Room> {
   async getAllByStationId(stationId: number): Promise<Room[]> {
     return await getRepository(Room)
       .createQueryBuilder('room')
-      .where('room.station_id = :stationId', { stationId })
+      .where('room.station = :stationId', { stationId })
       .getMany();
   }
 
   async getOneById(roomId: number): Promise<Room> {
     return await getRepository(Room)
       .createQueryBuilder('room')
-      .leftJoinAndSelect('room.station_id', 'station')
-      .leftJoinAndSelect('station.event_id', 'event')
+      .leftJoinAndSelect('room.station', 'station')
+      .leftJoinAndSelect('station.event', 'event')
       .where('room.id = :roomId', { roomId })
       .getOne();
   }

@@ -54,27 +54,27 @@ export class Order extends BaseEntity {
     nullable: false,
   })
   @JoinColumn({ name: 'user_id' })
-  user_id: User;
+  user: User;
 
   @ManyToOne(() => Station, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'station_id' })
-  station_id: Station;
+  station: Station;
 
   @ManyToOne(() => Room, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'room_id' })
-  room_id: Room;
+  room: Room;
 
   @ManyToOne(() => Event, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'event_id' })
-  event_id: Event;
+  event: Event;
 
   @OneToMany(() => Review, (review) => review.order)
   reviews: Review[];

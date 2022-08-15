@@ -71,8 +71,8 @@ export class RoomsService {
     }
 
     if (room.price) {
-      const { station_id } = await this.getRoomById(id);
-      this.updateStationPrice(station_id.id);
+      const { station } = await this.getRoomById(id);
+      this.updateStationPrice(station.id);
     }
 
     return room;
