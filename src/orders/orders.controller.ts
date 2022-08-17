@@ -21,8 +21,8 @@ import { OrdersService } from './orders.service';
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(100)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(100)
   @Get('/')
   async getAllOrders(): Promise<Order[]> {
     const data = await this.ordersService.getAllOrders();
