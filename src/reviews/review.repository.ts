@@ -2,7 +2,7 @@ import { EntityRepository, getRepository, Repository } from 'typeorm';
 import { SearchReviewDto } from './dto/search-review.dto';
 import { Review } from './review.entity';
 
-const REVIEW_TAKE = 3;
+const REVIEW_TAKE = 10;
 
 @EntityRepository(Review)
 export class ReviewRepository extends Repository<Review> {
@@ -17,9 +17,9 @@ export class ReviewRepository extends Repository<Review> {
     return await getRepository(Review)
       .createQueryBuilder('review')
       .leftJoinAndSelect('review.order', 'order')
-      .leftJoinAndSelect('order.station_id', 'station')
-      .leftJoinAndSelect('order.room_id', 'room')
-      .where('order.station_id = :stationId', { stationId })
+      .leftJoinAndSelect('order.station', 'station')
+      .leftJoinAndSelect('order.room', 'room')
+      .where('order.station = :stationId', { stationId })
       .orderBy('review.id', 'DESC')
       .limit(limit)
       .offset(offset)
@@ -30,9 +30,9 @@ export class ReviewRepository extends Repository<Review> {
     return await getRepository(Review)
       .createQueryBuilder('review')
       .leftJoinAndSelect('review.order', 'order')
-      .leftJoinAndSelect('order.station_id', 'station')
-      .leftJoinAndSelect('order.room_id', 'room')
-      .leftJoinAndSelect('order.user_id', 'user')
+      .leftJoinAndSelect('order.station', 'station')
+      .leftJoinAndSelect('order.room', 'room')
+      .leftJoinAndSelect('order.user', 'user')
       .where('user.id = :userId', { userId })
       .orderBy('review.id', 'DESC')
       //   .limit(limit)
@@ -44,8 +44,8 @@ export class ReviewRepository extends Repository<Review> {
     return await getRepository(Review)
       .createQueryBuilder('review')
       .leftJoinAndSelect('review.order', 'order')
-      .leftJoinAndSelect('order.station_id', 'station')
-      .leftJoinAndSelect('order.room_id', 'room')
+      .leftJoinAndSelect('order.station', 'station')
+      .leftJoinAndSelect('order.room', 'room')
       .where('review.id = :id', { id })
       .getOne();
   }

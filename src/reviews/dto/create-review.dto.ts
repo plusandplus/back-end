@@ -1,27 +1,18 @@
 import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Order } from 'src/orders/orders.entity';
-import { Review } from '../review.entity';
 
 export class CreateReviewDto {
-  //   @IsNotEmpty()
-  //   @IsString()
-  //   nickname: string;
-
   @IsNotEmpty()
   @IsInt()
   rating: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   image: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   content: string;
-
-  //   @IsOptional()
-  //   @IsInt()
-  //   review_id: Review;
 
   @IsNotEmpty()
   @IsInt()

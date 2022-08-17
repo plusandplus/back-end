@@ -14,6 +14,7 @@ import {
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { CreateReplyReviewDto } from './dto/create-replyreview.dto copy';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { SearchReviewDto } from './dto/search-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -37,18 +38,18 @@ export class ReviewsController {
     });
   }
 
-  //   @UseGuards(JwtAuthGuard, RolesGuard)
-  //   @Roles(10)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(10)
   @Get('/user/:id')
   async getReviewsByUser(
-    @Param('id', ParseIntPipe) id: number,
-    // @Req() req: any,
+    // @Param('id', ParseIntPipe) id: number,
+    @Req() req: any,
   ): Promise<Review[]> {
-    // const data = await this.reviewsService.getReviewsByUser(req.user.id);
-    const data = await this.reviewsService.getReviewsByUser(id);
+    const data = await this.reviewsService.getReviewsByUser(req.user.id);
+    // const data = await this.reviewsService.getReviewsByUser(id);
     return Object.assign({
       statusCode: 200,
-      message: `유저 id(${id})별 리뷰 목록 조회 성공`,
+      message: `유저 id(${req.user.id})별 리뷰 목록 조회 성공`,
       data,
     });
   }
@@ -71,6 +72,22 @@ export class ReviewsController {
     return Object.assign({
       statusCode: 201,
       message: `리뷰 등록 성공`,
+      data,
+    });
+  }
+
+  @Post('/:id')
+  async createReplyReview(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createReplyReviewDto: CreateReplyReviewDto,
+  ): Promise<Review> {
+    const data = await this.reviewsService.createReplyReview(
+      id,
+      createReplyReviewDto,
+    );
+    return Object.assign({
+      statusCode: 201,
+      message: `리뷰 답글 등록 성공`,
       data,
     });
   }

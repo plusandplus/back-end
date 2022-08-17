@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderRepository } from 'src/orders/order.repository';
 import { UserRepository } from 'src/users/user.repository';
+import { CreateReplyReviewDto } from './dto/create-replyreview.dto copy';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { SearchReviewDto } from './dto/search-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -56,6 +57,23 @@ export class ReviewsService {
     });
     await this.reviewRepository.save(review);
     return review;
+  }
+
+  async createReplyReview(
+    id: number,
+    createReplyReviewDto: CreateReplyReviewDto,
+  ): Promise<Review> {
+    // review_id로 order_id 구해서 저장
+    const { content } = createReplyReviewDto;
+    const review = await this.reviewRepository.getReviewById(id);
+    const replyreview = this.reviewRepository.create({
+      nickname: '관리자',
+      content,
+      review,
+    });
+
+    await this.reviewRepository.save(replyreview);
+    return replyreview;
   }
 
   async updateReview(
