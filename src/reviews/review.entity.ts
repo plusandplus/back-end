@@ -19,13 +19,13 @@ export class Review extends BaseEntity {
   @Column({ type: 'varchar', length: 45, comment: '닉네임' })
   nickname: string;
 
-  @Column({ type: 'int', comment: '평점(별점)' })
+  @Column({ type: 'int', nullable: true, comment: '평점(별점)' })
   rating: number;
 
-  @Column({ type: 'text', comment: '표정이미지주소' })
+  @Column({ type: 'text', nullable: true, comment: '리뷰 이미지' })
   image: string;
 
-  @Column({ type: 'varchar', comment: '리뷰내용' })
+  @Column({ type: 'varchar', nullable: true, comment: '리뷰내용' })
   content: string;
 
   @CreateDateColumn({
@@ -49,7 +49,6 @@ export class Review extends BaseEntity {
 
   @ManyToOne(() => Order, {
     onDelete: 'CASCADE',
-    nullable: false,
   })
   @JoinColumn({ name: 'order_id' })
   order: Order;

@@ -7,5 +7,9 @@ export class UpdateReviewDto {
 
   @IsOptional()
   @IsString()
+  image: string;
+
+  @IsOptional()
+  @IsString()
   content: string;
 }
