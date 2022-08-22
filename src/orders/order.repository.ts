@@ -23,7 +23,9 @@ export class OrderRepository extends Repository<Order> {
       .leftJoinAndSelect('order.station', 'station')
       .leftJoinAndSelect('order.room', 'room')
       .leftJoinAndSelect('order.event', 'event')
+      .leftJoinAndSelect('order.review', 'review')
       .where('order.user =:id', { id })
+      .where('order.id = review.order_id')
       .orderBy('order.id', 'DESC')
       .getMany();
   }

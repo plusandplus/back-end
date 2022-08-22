@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrdersService } from 'src/orders/orders.service';
 import { UserRepository } from 'src/users/user.repository';
@@ -41,6 +45,14 @@ export class ReviewsService {
   async createReview(createReviewDto: CreateReviewDto): Promise<Review> {
     const { rating, image, content, order_id } = createReviewDto;
 
+    // 같은 order에 review 달 수 없도록 중복처리
+    const IsOrder = await this.reviewRepository.getReviewByOrderId(
+      Number(order_id),
+    );
+    if (IsOrder) {
+      throw new ConflictException('이미 리뷰를 등록했습니다.');
+    }
+
     // order_id로 user_id, nickname 구해서 저장
     const order = await this.orderService.getOrderById(Number(order_id));
     // const { user_id, station_id, room_id } = order;
@@ -65,11 +77,11 @@ export class ReviewsService {
   ): Promise<Review> {
     // review_id로 order_id 구해서 저장
     const { content } = createReplyReviewDto;
-    const review = await this.reviewRepository.getReviewById(id);
+    // const review = await this.reviewRepository.getReviewById(id);
     const replyreview = this.reviewRepository.create({
       nickname: '관리자',
       content,
-      review,
+      // review,
     });
 
     await this.reviewRepository.save(replyreview);
