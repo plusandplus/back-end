@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderRepository } from 'src/orders/order.repository';
+import { OrdersService } from 'src/orders/orders.service';
 import { UserRepository } from 'src/users/user.repository';
-import { CreateReplyReviewDto } from './dto/create-replyreview.dto copy';
+import { CreateReplyReviewDto } from './dto/create-replyreview.dto';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { SearchReviewDto } from './dto/search-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -14,7 +18,7 @@ export class ReviewsService {
   constructor(
     @InjectRepository(ReviewRepository)
     private reviewRepository: ReviewRepository,
-    private orderRepository: OrderRepository,
+    private orderService: OrdersService,
     private userRepository: UserRepository,
   ) {}
   async getReviewsByStation(
@@ -41,8 +45,16 @@ export class ReviewsService {
   async createReview(createReviewDto: CreateReviewDto): Promise<Review> {
     const { rating, image, content, order_id } = createReviewDto;
 
+    // 같은 order에 review 달 수 없도록 중복처리
+    const IsOrder = await this.reviewRepository.getReviewByOrderId(
+      Number(order_id),
+    );
+    if (IsOrder) {
+      throw new ConflictException('이미 리뷰를 등록했습니다.');
+    }
+
     // order_id로 user_id, nickname 구해서 저장
-    const order = await this.orderRepository.getOrderById(Number(order_id));
+    const order = await this.orderService.getOrderById(Number(order_id));
     // const { user_id, station_id, room_id } = order;
     const { nickName } = await this.userRepository.findOne(
       Number(order.user.id),
@@ -65,11 +77,11 @@ export class ReviewsService {
   ): Promise<Review> {
     // review_id로 order_id 구해서 저장
     const { content } = createReplyReviewDto;
-    const review = await this.reviewRepository.getReviewById(id);
+    // const review = await this.reviewRepository.getReviewById(id);
     const replyreview = this.reviewRepository.create({
       nickname: '관리자',
       content,
-      review,
+      // review,
     });
 
     await this.reviewRepository.save(replyreview);

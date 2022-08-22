@@ -1,12 +1,10 @@
 import { Order } from 'src/orders/orders.entity';
-import { Room } from 'src/rooms/room.entity';
-import { Station } from 'src/stations/station.entity';
-import { User } from 'src/users/user.entity';
 import {
   BaseEntity,
   CreateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
@@ -47,30 +45,9 @@ export class Review extends BaseEntity {
   @JoinColumn({ name: 'review_id' })
   review: Review;
 
-  @ManyToOne(() => Order, {
+  @OneToOne(() => Order, (order) => order.review, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'order_id' })
   order: Order;
-
-  //   @ManyToOne(() => User, {
-  //     onDelete: 'CASCADE',
-  //     nullable: false,
-  //   })
-  //   @JoinColumn({ name: 'user_id' })
-  //   user: User;
-
-  //   @ManyToOne(() => Station, {
-  //     onDelete: 'CASCADE',
-  //     nullable: false,
-  //   })
-  //   @JoinColumn({ name: 'station_id' })
-  //   station: Station;
-
-  //   @ManyToOne(() => Room, {
-  //     onDelete: 'CASCADE',
-  //     nullable: false,
-  //   })
-  //   @JoinColumn({ name: 'room_id' })
-  //   room: Room;
 }

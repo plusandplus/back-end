@@ -9,7 +9,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -76,6 +76,6 @@ export class Order extends BaseEntity {
   @JoinColumn({ name: 'event_id' })
   event: Event;
 
-  @OneToMany(() => Review, (review) => review.order)
-  reviews: Review[];
+  @OneToOne(() => Review, (review) => review.order)
+  review: Review;
 }

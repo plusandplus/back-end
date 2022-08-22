@@ -49,4 +49,11 @@ export class ReviewRepository extends Repository<Review> {
       .where('review.id = :id', { id })
       .getOne();
   }
+
+  async getReviewByOrderId(id: number): Promise<Review> {
+    return await getRepository(Review)
+      .createQueryBuilder('review')
+      .where('review.order_id = :id', { id })
+      .getOne();
+  }
 }
