@@ -82,8 +82,8 @@ export class StationsService {
       x,
       y,
       status,
-      local_id,
-      stay_id,
+      local,
+      stay,
       themes,
     } = updateStationDto;
     if (themes) await this.updateStationTheme(id, themes);
@@ -97,8 +97,8 @@ export class StationsService {
       ...(x && { x }),
       ...(y && { y }),
       ...(status && { status }),
-      ...(local_id && { local_id }),
-      ...(stay_id && { stay_id }),
+      ...(local && { local }),
+      ...(stay && { stay }),
     });
     if (result.affected === 0) {
       throw new NotFoundException(

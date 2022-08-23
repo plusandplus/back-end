@@ -17,7 +17,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({

@@ -49,16 +49,16 @@ export class CreateStationDto {
 
   @IsNotEmpty()
   @IsInt()
-  local_id: Category;
+  local: Category;
 
   @IsNotEmpty()
   @IsInt()
-  stay_id: Category;
+  stay: Category;
 
   @IsNotEmpty()
   themes: Theme[];
 
   @IsOptional()
   @IsInt()
-  event_id: Event;
+  event: Event;
 }

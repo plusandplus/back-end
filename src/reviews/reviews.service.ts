@@ -75,13 +75,10 @@ export class ReviewsService {
     id: number,
     createReplyReviewDto: CreateReplyReviewDto,
   ): Promise<Review> {
-    // review_id로 order_id 구해서 저장
     const { content } = createReplyReviewDto;
-    // const review = await this.reviewRepository.getReviewById(id);
     const replyreview = this.reviewRepository.create({
       nickname: '관리자',
       content,
-      // review,
     });
 
     await this.reviewRepository.save(replyreview);

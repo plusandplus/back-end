@@ -56,8 +56,8 @@ export class RoomsService {
     const room = this.roomRepository.create(createRoomDto);
     await this.roomRepository.save(room);
 
-    const { station_id } = createRoomDto;
-    this.updateStationPrice(Number(station_id));
+    const { station } = createRoomDto;
+    this.updateStationPrice(Number(station));
 
     return room;
   }

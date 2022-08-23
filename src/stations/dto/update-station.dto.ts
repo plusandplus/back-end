@@ -43,16 +43,16 @@ export class UpdateStationDto {
 
   @IsOptional()
   @IsInt()
-  local_id: Category;
+  local: Category;
 
   @IsOptional()
   @IsInt()
-  stay_id: Category;
+  stay: Category;
 
   @IsOptional()
   themes: Theme[];
 
   @IsOptional()
   @IsInt()
-  event_id: Event;
+  event: Event;
 }

@@ -30,17 +30,17 @@ export class CreateOrderDto {
 
   @IsNotEmpty()
   @IsInt()
-  user_id: User;
+  user: User;
 
   @IsNotEmpty()
   @IsInt()
-  station_id: Station;
+  station: Station;
 
   @IsNotEmpty()
   @IsInt()
-  room_id: Room;
+  room: Room;
 
   @IsOptional()
   @IsInt()
-  event_id: Event;
+  event: Event;
 }

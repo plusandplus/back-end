@@ -37,5 +37,5 @@ export class CreateRoomDto {
 
   @IsNotEmpty()
   @IsInt()
-  station_id: Station;
+  station: Station;
 }
