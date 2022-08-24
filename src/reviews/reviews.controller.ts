@@ -40,13 +40,9 @@ export class ReviewsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(10)
-  @Get('/user/:id')
-  async getReviewsByUser(
-    // @Param('id', ParseIntPipe) id: number,
-    @Req() req: any,
-  ): Promise<Review[]> {
+  @Get('/user')
+  async getReviewsByUser(@Req() req: any): Promise<Review[]> {
     const data = await this.reviewsService.getReviewsByUser(req.user.id);
-    // const data = await this.reviewsService.getReviewsByUser(id);
     return Object.assign({
       statusCode: 200,
       message: `유저 id(${req.user.id})별 리뷰 목록 조회 성공`,
