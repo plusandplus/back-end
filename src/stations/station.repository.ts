@@ -70,7 +70,7 @@ export class StationRepository extends Repository<Station> {
       const themearr = themeIds.split(',');
       result.andWhere('theme.id IN (:...themeIds)', { themeIds: themearr });
     }
-    // result.limit(limit).offset(offset);
+    result.take(limit).skip(offset);
     console.log(result.getQuery());
 
     const [stations, count] = await result
@@ -167,7 +167,7 @@ export class StationRepository extends Repository<Station> {
         .groupBy('station.id')
         .having('count(*)-count(o.id)>0');
     }
-    // result.limit(limit).offset(offset);
+    result.take(limit).skip(offset);
     console.log(result.getQuery());
     const [stations, count] = await result.getManyAndCount();
     return { count, stations };
