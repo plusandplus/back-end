@@ -4,6 +4,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './orders.entity';
 import { OrderRepository } from './order.repository';
 import { RoomOrderDto } from './dto/room-order.dto';
+import { ReturnOrderDto } from './dto/returnOrderDto';
 
 @Injectable()
 export class OrdersService {
@@ -16,14 +17,29 @@ export class OrdersService {
     return await this.orderRepository.getOrderAll();
   }
 
-  async getOrderByUser(id: number): Promise<Order[]> {
-    const found = await this.orderRepository.getOrderByUser(id);
-    if (!found) {
+  async getOrderByUser(id: number): Promise<ReturnOrderDto> {
+    // 오늘을 기준으로 이용완료/앞으로 남은 예약
+    const today = this.getToday();
+    const complete = await this.orderRepository.getCompleteByUser(id, today);
+    const future = await this.orderRepository.getOrderByUser(id, today);
+    if (!complete || !future) {
       throw new NotFoundException(
         `해당 User의 id(${id})가 없습니다. 다시 한 번 확인해 주세요.`,
       );
     }
-    return found;
+    return { complete, future };
+  }
+
+  getToday() {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+
+    const dateString = year + '-' + month + '-' + day;
+    console.log(dateString);
+    return dateString;
   }
 
   async getOrderById(id: number): Promise<Order> {

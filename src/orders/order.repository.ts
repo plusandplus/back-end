@@ -16,7 +16,7 @@ export class OrderRepository extends Repository<Order> {
   }
 
   // 유저별 상세조회
-  async getOrderByUser(id: number): Promise<Order[]> {
+  async getCompleteByUser(id: number, today: string): Promise<Order[]> {
     return await getRepository(Order)
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.user', 'user')
@@ -25,6 +25,21 @@ export class OrderRepository extends Repository<Order> {
       .leftJoinAndSelect('order.event', 'event')
       .leftJoinAndSelect('order.review', 'review')
       .where('order.user = :id', { id })
+      .andWhere('order.start_date<= :today', { today })
+      .orderBy('order.id', 'DESC')
+      .getMany();
+  }
+
+  async getOrderByUser(id: number, today: string): Promise<Order[]> {
+    return await getRepository(Order)
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.user', 'user')
+      .leftJoinAndSelect('order.station', 'station')
+      .leftJoinAndSelect('order.room', 'room')
+      .leftJoinAndSelect('order.event', 'event')
+      .leftJoinAndSelect('order.review', 'review')
+      .where('order.user = :id', { id })
+      .andWhere('order.start_date > :today', { today })
       .orderBy('order.id', 'DESC')
       .getMany();
   }
