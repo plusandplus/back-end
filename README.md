@@ -29,7 +29,7 @@
 
 ---
 
-### 숙소 관련 기능
+### 🏠 숙소 관련 기능
 | 캘린더 필터 | 테마, 스테이 유형, 지역 필터 |
 | --------------------------- |  --------------------------- |
 | <img src="https://user-images.githubusercontent.com/43837954/183718286-aea76b7d-c2ff-40d4-828c-71cc8652dde4.gif" width=200> | <img src="https://user-images.githubusercontent.com/43837954/183718466-e0111040-050c-4491-9a2d-a626617195b6.gif" width=200> |
@@ -38,7 +38,7 @@
 | --------------------------- |  --------------------------- |
 | <img src="https://user-images.githubusercontent.com/43837954/183718479-faadcd99-9642-4ef0-9104-2522f0a04539.gif" width=200> | <img src="https://user-images.githubusercontent.com/43837954/183718496-af8de0a5-9f0e-4d44-9f7f-c5bba6cc0d09.gif" width=200> |
 
-### 유저 관련 기능
+### 😃 유저 관련 기능
 | 카카오/네이버 소셜 로그인 | 회원 정보 수정 | 좋아요(찜) 기능 |
 | --------------------------- |  --------------------------- |  --------------------------- | 
 | <img src="https://user-images.githubusercontent.com/43837954/183717776-e425c289-dca2-4df1-aa02-3742730223c7.gif" width= 200> | <img src="https://user-images.githubusercontent.com/43837954/183718084-9acdcdc2-4ae2-4322-8a66-7fb528b26ab9.gif" width=200> | <img src="https://user-images.githubusercontent.com/43837954/183718136-2675d111-a819-4d6d-a8d6-c57343cedf09.gif" width=200> |
